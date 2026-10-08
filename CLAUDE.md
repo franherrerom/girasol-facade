@@ -1,4 +1,6 @@
 # Rules for this project
+This site is built with Claude Code. These are the same rules as AGENTS.md.
+
 - Always read DESIGN.md and SPEC.md before any change.
 - DESIGN.md and SPEC.md are the boss. When I change a design or content
   decision, update DESIGN.md or SPEC.md first, then change the site, so
