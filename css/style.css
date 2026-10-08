@@ -110,6 +110,61 @@ a { color: inherit; }
   border: 0;
 }
 
+/* ---------- Log-in gate ---------- */
+/* Gated pages stay hidden until js/auth.js finds a session */
+.auth-pending body { visibility: hidden; }
+
+/* ---------- Menu ---------- */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s2) var(--margin);
+  color: var(--text);
+}
+
+.site-nav .brand {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--h3);
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a,
+.site-nav button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.site-nav a:hover,
+.site-nav button:hover,
+.site-nav [aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex;
@@ -282,10 +337,40 @@ a { color: inherit; }
   font-size: var(--small);
 }
 
+/* On successful log-in the frost clears and the card fades */
+.login-frost,
+.login-card {
+  transition:
+    opacity 800ms var(--ease),
+    transform 800ms var(--ease);
+}
+.is-entering .login-frost { opacity: 0; }
+.is-entering .login-card {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
 .login .site-footer {
   position: relative;
   text-align: center;
 }
+
+/* ---------- Home ---------- */
+.home {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Text floats in the lower-left corner, clear of the facade's centre */
+.home-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--s6) var(--margin) var(--s4);
+}
+
+.home-text { max-width: 640px; }
+.home-text .key { margin-top: var(--s2); }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {

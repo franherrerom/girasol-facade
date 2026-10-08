@@ -67,12 +67,13 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 
 ## Log-in gate
 - Visitors sign up with email and password and log in, using Supabase Auth.
+- Supabase project: girasol-facade (us-east-1, Free plan), https://jxeenqvokwceylkqenrf.supabase.co. Its URL and publishable key live in js/supabase-config.js.
 - login.html is the log-in page and is never gated.
 - index.html is the home page.
 - Every page except login.html sends signed-out visitors to login.html. Pages stay hidden until the session check passes, so gated content never flashes.
 - After log-in, go to index.html.
 - Log out is in the menu on every page and returns the visitor to login.html.
-- If Supabase email confirmation is on, sign-up shows "Check your email to confirm your account."
+- Email confirmation is off: a new account is logged in straight away and goes to index.html. If confirmation is ever turned back on, sign-up shows "Check your email to confirm your account."
 - Only the Supabase project URL and the public anon (publishable) key go in the code. Never the service role key.
 - All links are relative.
 

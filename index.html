@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" class="auth-pending">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Girasol Facade</title>
+  <meta name="description" content="Drag the sun and watch Girasol's solar facade open to follow it.">
+
+  <meta property="og:title" content="Girasol Facade">
+  <meta property="og:description" content="The building follows the sun all day to make its own energy.">
+  <meta property="og:url" content="https://girasol-facade.vercel.app/index.html">
+  <meta property="og:image" content="https://girasol-facade.vercel.app/images/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Placeholder for an image of the Girasol facade opening at noon.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&family=Inter:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home">
+
+  <nav class="site-nav" aria-label="Main">
+    <a class="brand" href="index.html">Girasol</a>
+    <ul>
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="day.html">A Day</a></li>
+      <li><a href="module.html">The Module</a></li>
+      <li><button type="button" data-logout>Log out</button></li>
+    </ul>
+  </nav>
+
+  <main class="home-main">
+    <!-- The 3D facade and the sun will render here in a later step -->
+    <div class="home-text">
+      <h1>Girasol</h1>
+      <p class="key">The building follows the sun all day to make its own energy.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Girasol Facade. A speculative design concept by Francisco Herrero.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

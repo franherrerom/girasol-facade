@@ -1,6 +1,5 @@
 // Log-in card: switches between Log in and Create account,
-// and checks the fields before anything is sent.
-// Supabase is connected in a later step.
+// checks the fields, then logs in or signs up with Supabase.
 
 const form = document.getElementById("login-form");
 const email = document.getElementById("email");
@@ -22,11 +21,42 @@ function setMode(next) {
   message.textContent = "";
 }
 
+// Turns Supabase errors into plain language
+function friendlyError(error) {
+  const text = (error && error.message ? error.message : "").toLowerCase();
+  if (text.includes("invalid login credentials")) {
+    return "That email and password don't match. Try again, or create an account.";
+  }
+  if (text.includes("already registered")) {
+    return "There's already an account with that email. Log in instead.";
+  }
+  if (text.includes("email not confirmed")) {
+    return "Check your email to confirm your account.";
+  }
+  if (text.includes("password")) {
+    return "Pick a longer password: at least 6 characters.";
+  }
+  if (text.includes("rate limit") || text.includes("too many")) {
+    return "Too many tries. Wait a minute and try again.";
+  }
+  if (text.includes("fetch") || text.includes("network")) {
+    return "Can't reach the server. Check your connection and try again.";
+  }
+  return "Something went wrong. Please try again.";
+}
+
+// Frost clears, then the visitor moves into the home page
+function enterSite() {
+  document.body.classList.add("is-entering");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(() => location.replace("index.html"), reduced ? 0 : 800);
+}
+
 switchBtn.addEventListener("click", () => {
   setMode(mode === "login" ? "signup" : "login");
 });
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   if (!email.value.trim() || !email.validity.valid) {
@@ -40,5 +70,29 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  message.textContent = "Log-in isn't connected yet. Coming in the next step.";
+  const auth = window.girasolAuth.auth;
+  const credentials = { email: email.value.trim(), password: password.value };
+
+  submitBtn.disabled = true;
+  message.textContent = mode === "signup" ? "Creating your account…" : "Logging in…";
+
+  const { data, error } = mode === "signup"
+    ? await auth.signUp(credentials)
+    : await auth.signInWithPassword(credentials);
+
+  submitBtn.disabled = false;
+
+  if (error) {
+    message.textContent = friendlyError(error);
+    return;
+  }
+
+  // Sign-up without a session means email confirmation is switched on
+  if (!data.session) {
+    message.textContent = "Check your email to confirm your account.";
+    return;
+  }
+
+  message.textContent = "";
+  enterSite();
 });
