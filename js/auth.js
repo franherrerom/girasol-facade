@@ -6,7 +6,20 @@
 
 (function () {
   const cfg = window.GIRASOL_SUPABASE;
-  const client = window.supabase.createClient(cfg.url, cfg.publishableKey);
+
+  // A log-in lasts only for this tab, so every new visit starts at login.html.
+  // Clear any log-in an older version of the site saved for good.
+  try {
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith("sb-"))
+      .forEach((key) => localStorage.removeItem(key));
+  } catch (error) {
+    // Storage blocked: nothing to clear
+  }
+
+  const client = window.supabase.createClient(cfg.url, cfg.publishableKey, {
+    auth: { storage: window.sessionStorage, persistSession: true }
+  });
   window.girasolAuth = client;
 
   const root = document.documentElement;

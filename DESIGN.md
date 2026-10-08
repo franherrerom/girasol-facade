@@ -32,6 +32,8 @@ Model materials:
 - Solar cells: black glass, #0B0C10, glossy, catching sun highlights.
 - Ground floor: clear glass with a faint cool tint.
 
+City skyline (Home): flat silhouettes in two layers, a few shades from the sky colour, darker for the nearer layer. Never so dark that text over it drops below WCAG AA.
+
 Text contrast must meet WCAG AA at every point of the day cycle. Between dusk and night, text switches from Ink to Paper at the moment contrast requires it.
 
 ## Type

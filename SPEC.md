@@ -19,6 +19,8 @@ Content:
 - On load, the facade fills the screen fully closed. Over about 4 seconds the sun sweeps in and every module opens toward it in a wave. No text competes during this.
 - Then "Girasol" and the key sentence appear, followed by a hint pill: "Drag the sun."
 - The visitor drags the sun across the sky with mouse or finger. Every module turns and opens to follow it. The background moves through the day cycle with the sun's height.
+- The background never stands still: when nobody is dragging, the sun keeps moving on its own and a full day (dawn to night and round again) passes in about 45 seconds. Dragging takes over; a few seconds after letting go, the day carries on from there.
+- Behind the building, a simple made-up city skyline in silhouette, tinted by the sky colour. Not a real city's skyline.
 - A link at the bottom: "Watch a whole day" leading to day.html.
 - Footer line.
 
@@ -72,6 +74,7 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - index.html is the home page.
 - Every page except login.html sends signed-out visitors to login.html. Pages stay hidden until the session check passes, so gated content never flashes.
 - After log-in, go to index.html.
+- A log-in lasts only for the current browser tab. Every new visit, new tab or link opened fresh starts at login.html.
 - Log out is in the menu on every page and returns the visitor to login.html.
 - Email confirmation is off: a new account is logged in straight away and goes to index.html. If confirmation is ever turned back on, sign-up shows "Check your email to confirm your account."
 - Only the Supabase project URL and the public anon (publishable) key go in the code. Never the service role key.

@@ -186,6 +186,60 @@ function glowTexture() {
   return tex;
 }
 
+/* ---------- City skyline (Home) ---------- */
+// A made-up skyline, not a real city: rows of plain blocks behind the building.
+function seeded(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function skylineLayer(z, minH, maxH, seed) {
+  const rand = seeded(seed);
+  const blocks = [];
+  for (let x = -520; x < 520; ) {
+    const w = 10 + rand() * 22;
+    let h = minH + rand() * (maxH - minH) * 0.6;
+    if (rand() > 0.82) h = minH + (maxH - minH) * (0.7 + rand() * 0.3); // the odd tower
+    blocks.push({ x: x + w / 2, w, h });
+    x += w + rand() * 4;
+  }
+  const mat = new THREE.MeshBasicMaterial({ toneMapped: false });
+  const mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), mat, blocks.length);
+  const dummy = new THREE.Object3D();
+  const BASE = -90; // runs below the bottom of the screen
+  blocks.forEach((b, i) => {
+    dummy.position.set(b.x, (BASE + b.h) / 2, z);
+    dummy.scale.set(b.w, b.h - BASE, 8);
+    dummy.updateMatrix();
+    mesh.setMatrixAt(i, dummy.matrix);
+  });
+  return { mesh, mat };
+}
+
+// Silhouette colours a few shades from the sky, never so dark that text loses AA contrast
+function skylineColors(t) {
+  const sky = skyAt(t);
+  const bg = hexToRgb(sky.bg);
+  const text = hexToRgb(sky.text);
+  const shadow = sky.dark ? [0, 0, 0] : hexToRgb(COLOR.ink);
+  const shade = (amount) => {
+    let k = amount;
+    let c = mixRgb(bg, shadow, k);
+    while (k > 0 && contrast(c, text) < 4.5) {
+      k -= 0.01;
+      c = mixRgb(bg, shadow, Math.max(k, 0));
+    }
+    return rgbToHex(c);
+  };
+  return { far: shade(0.08), near: shade(0.16) };
+}
+
 function makeRenderer(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -457,6 +511,16 @@ export function createFacade(canvas, options = {}) {
     skin.add(flow.points);
   }
 
+  /* City skyline behind the building */
+  let skyline = null;
+  if (options.skyline) {
+    skyline = {
+      far: skylineLayer(-260, 30, 170, 7),
+      near: skylineLayer(-150, 15, 100, 21)
+    };
+    scene.add(skyline.far.mesh, skyline.near.mesh);
+  }
+
   /* The sun */
   const sun = new THREE.Group();
   const sunDisc = new THREE.Mesh(
@@ -464,7 +528,8 @@ export function createFacade(canvas, options = {}) {
     new THREE.MeshBasicMaterial({ color: COLOR.sun, transparent: true, toneMapped: false })
   );
   const sunHalo = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: glowTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false
+    // Normal blending: the glow looks the same over open sky and over the skyline
+    map: glowTexture(), transparent: true, depthWrite: false, toneMapped: false
   }));
   sunHalo.scale.set(34, 34, 1);
   sun.add(sunHalo, sunDisc);
@@ -649,6 +714,11 @@ export function createFacade(canvas, options = {}) {
     updateModules(dt);
 
     const calm = 1 - state.explode;
+    if (skyline) {
+      const tint = skylineColors(state.t);
+      skyline.far.mat.color.set(tint.far);
+      skyline.near.mat.color.set(tint.near);
+    }
     glowMat.opacity = state.energy * 0.85 * calm;
     interiorMat.opacity = 1 - state.explode * 0.9;
     entryMat.opacity = 1 - state.explode * 0.9;
