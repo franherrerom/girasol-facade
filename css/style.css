@@ -355,22 +355,476 @@ a { color: inherit; }
   text-align: center;
 }
 
+/* ---------- Phone menu ---------- */
+.menu-btn {
+  display: none;
+  height: 40px;
+  padding: 0 var(--s2);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 759px) {
+  .site-nav .menu-btn { display: inline-flex; align-items: center; }
+  .site-nav .brand { position: relative; z-index: 2; }
+  .site-nav ul { display: none; }
+
+  .site-nav.is-open ul {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--s3);
+    padding: var(--s6) var(--margin);
+    background: var(--bg);
+  }
+  .site-nav.is-open ul a,
+  .site-nav.is-open ul button {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: var(--h2);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .menu-open { overflow: hidden; }
+}
+
+/* ---------- Page changes ---------- */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 600ms;
+  animation-timing-function: var(--ease);
+}
+.site-nav { view-transition-name: site-nav; }
+
+/* Browsers without view transitions get a plain 300ms fade */
+@supports not (view-transition-name: none) {
+  body { animation: page-fade 300ms ease-out both; }
+}
+@keyframes page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- 3D model ---------- */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.model-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  outline-offset: -4px;
+  transition: opacity 1200ms var(--ease);
+}
+.model-canvas.is-ready { opacity: 1; }
+.model-canvas.is-fading {
+  opacity: 0;
+  transition-duration: 300ms;
+}
+
+.login-stage .model-canvas { position: absolute; inset: 0; }
+
+/* Text and controls sit above the model */
+.site-footer,
+.page-layer { position: relative; z-index: 1; }
+
+/* Fade-in for text that waits its turn */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 800ms var(--ease),
+    transform 800ms var(--ease);
+}
+.reveal.is-shown {
+  opacity: 1;
+  transform: none;
+}
+
 /* ---------- Home ---------- */
 .home {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-/* Text floats in the lower-left corner, clear of the facade's centre */
+.home .stage canvas {
+  touch-action: none;
+  cursor: grab;
+}
+.home .stage canvas:active { cursor: grabbing; }
+
+/* Text floats in the lower-left corner, clear of the facade's centre.
+   The layer lets drags pass through to the model. */
 .home-main {
   flex: 1;
   display: flex;
   align-items: flex-end;
-  padding: var(--s6) var(--margin) var(--s4);
+  padding: var(--s6) var(--margin) var(--s3);
+  pointer-events: none;
+}
+.home-main a,
+.home-main button { pointer-events: auto; }
+
+.home-text { max-width: 560px; }
+@media (min-width: 760px) {
+  /* Stay inside the left 5 columns */
+  .home-text { max-width: min(560px, 40vw); }
+}
+.home-text .key { margin-top: var(--s2); }
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+  margin-top: var(--s3);
 }
 
-.home-text { max-width: 640px; }
-.home-text .key { margin-top: var(--s2); }
+/* ---------- A Day ---------- */
+.day .stage canvas { cursor: pointer; }
+
+.chapters {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.chapter {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  align-items: center;
+  max-width: var(--max);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: var(--s6) var(--margin);
+}
+
+.chapter-text {
+  grid-column: 8 / span 5;
+  pointer-events: auto;
+}
+.chapter[data-side="right"] .chapter-text { grid-column: 1 / span 5; }
+
+.chapter-text .eyebrow {
+  margin-bottom: var(--s2);
+  font-size: var(--small);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.chapter-text p { margin-top: var(--s3); }
+.chapter-text h2 + p { margin-top: var(--s3); }
+
+/* The Noon chapter is long, so the building has time to come apart and back */
+.chapter.is-long {
+  align-items: start;
+  min-height: 260vh;
+}
+.chapter.is-long .chapter-text {
+  position: sticky;
+  top: 22vh;
+}
+
+.layers {
+  margin: var(--s3) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: layer;
+}
+.layers li {
+  display: flex;
+  gap: var(--s2);
+  padding: var(--s1) 0;
+  border-top: 1px solid currentColor;
+}
+.layers li::before {
+  counter-increment: layer;
+  content: counter(layer);
+  min-width: 1.5em;
+  font-weight: 500;
+}
+
+/* Energy counter and hint sit in the bottom corner on the model's side */
+.day-corner {
+  position: fixed;
+  right: var(--margin);
+  bottom: var(--s4);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s2);
+  text-align: right;
+  pointer-events: none;
+}
+.day[data-model="left"] .day-corner {
+  right: auto;
+  left: var(--margin);
+  align-items: flex-start;
+  text-align: left;
+}
+.counter { pointer-events: none; }
+.counter-value {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--h2);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.counter-label {
+  font-size: var(--small);
+  font-weight: 500;
+}
+
+
+/* Diagrams */
+.diagram {
+  margin-top: var(--s4);
+  font-size: var(--small);
+  font-weight: 500;
+}
+.bar-row + .bar-row { margin-top: var(--s2); }
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--s1);
+}
+.bar {
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--energy);
+  transition: width 1200ms var(--ease) 200ms;
+}
+.is-visible .bar span { width: var(--w); }
+
+.sum {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: var(--s1) var(--s2);
+}
+.sum strong { text-align: right; }
+.sum strong {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--h3);
+  letter-spacing: -0.03em;
+}
+
+.homes {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  max-width: 320px;
+}
+.homes span {
+  aspect-ratio: 1;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  transition: background-color 400ms var(--ease);
+  transition-delay: calc(var(--i) * 40ms);
+}
+.is-visible .homes span { background: var(--energy); }
+
+.day-end {
+  margin-top: var(--s4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+/* Phone: the model is pinned to the top 55% and the text scrolls below it */
+@media (max-width: 759px) {
+  /* The pinned model sits above the text, so text scrolls under it */
+  .day .stage {
+    bottom: auto;
+    z-index: 2;
+    height: 55vh;
+    height: 55dvh;
+    background: var(--bg);
+  }
+  .day .day-corner { z-index: 3; }
+  .chapters { padding-top: 55vh; padding-top: 55dvh; }
+  .chapter {
+    display: block;
+    min-height: 70vh;
+    padding: var(--s5) var(--margin);
+  }
+  .chapter.is-long { min-height: 160vh; }
+  .chapter.is-long .chapter-text { top: calc(55dvh + var(--s3)); }
+  .day-corner,
+  .day[data-model="left"] .day-corner {
+    top: calc(55dvh - var(--s2));
+    bottom: auto;
+    left: var(--margin);
+    right: var(--margin);
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-end;
+    transform: translateY(-100%);
+  }
+  .counter-value { font-size: 32px; }
+  .day .site-footer { position: relative; z-index: 1; }
+}
+
+/* ---------- The Module ---------- */
+.module {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+.module .stage canvas {
+  touch-action: none;
+  cursor: grab;
+}
+.module .stage canvas:active { cursor: grabbing; }
+
+.module-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-content: space-between;
+  gap: var(--s4) var(--s5);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--s6) var(--margin) var(--s4);
+  pointer-events: none;
+}
+.module-main > * { pointer-events: auto; }
+.module-intro { max-width: 440px; }
+.module-intro p { margin-top: var(--s2); }
+
+.figures {
+  align-self: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: right;
+}
+.figures li + li { margin-top: var(--s2); }
+.figures strong {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--h3);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.figures span { font-size: var(--small); }
+
+.module-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--small);
+  font-weight: 500;
+}
+.slider input {
+  width: min(320px, 56vw);
+  height: 48px;
+  accent-color: var(--ink);
+}
+.slider output {
+  min-width: 4ch;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--h3);
+  font-variant-numeric: tabular-nums;
+}
+
+.module-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+.btn-quiet {
+  background: transparent;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+/* Part labels follow the parts on screen */
+.part-labels {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.part-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -16px 0 0 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-size: var(--small);
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+@media (max-width: 759px) {
+  /* The module stays in the first screen; figures and controls follow below it */
+  .module .stage,
+  .module .part-labels {
+    position: absolute;
+    bottom: auto;
+    height: 100vh;
+    height: 100svh;
+  }
+  .module-main {
+    grid-template-columns: 1fr;
+    padding-top: var(--s5);
+  }
+  .module-main .figures { margin-top: 40svh; }
+  .figures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s2);
+    text-align: left;
+    align-self: end;
+  }
+  .figures li + li { margin-top: 0; }
+}
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" class="auth-pending">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Module | Girasol Facade</title>
+  <meta name="description" content="One Girasol triangle up close: turn it, open it, and take it apart.">
+
+  <meta property="og:title" content="The Girasol Module">
+  <meta property="og:description" content="The building follows the sun all day to make its own energy.">
+  <meta property="og:url" content="https://girasol-facade.vercel.app/module.html">
+  <meta property="og:image" content="https://girasol-facade.vercel.app/images/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Placeholder for an image of the Girasol facade opening at noon.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&family=Inter:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="module">
+
+  <nav class="site-nav" aria-label="Main">
+    <a class="brand" href="index.html">Girasol</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-list">Menu</button>
+    <ul id="menu-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="day.html">A Day</a></li>
+      <li><a href="module.html" aria-current="page">The Module</a></li>
+      <li><button type="button" data-logout>Log out</button></li>
+    </ul>
+  </nav>
+
+  <div class="stage">
+    <canvas id="model" class="model-canvas" tabindex="0" role="img"
+      aria-label="One Girasol module: an aluminium triangular frame holding three white leaves with black solar cells, hinged at the frame edges. Drag, or use the arrow keys, to turn it. The slider below opens the leaves; the Take it apart button separates the frame, leaves, solar cells and hinge motors."></canvas>
+  </div>
+
+  <div class="part-labels" aria-hidden="true">
+    <span class="part-label" id="label-frame">Frame</span>
+    <span class="part-label" id="label-leaves">Three leaves</span>
+    <span class="part-label" id="label-cells">Solar cells</span>
+    <span class="part-label" id="label-motors">Motor at each hinge</span>
+  </div>
+
+  <main class="module-main page-layer">
+    <div class="module-intro">
+      <h1>One triangle.</h1>
+      <p>Three leaves in a frame. They open toward the sun, and close when it leaves.</p>
+      <p class="hint" id="hint">Drag to turn it.</p>
+    </div>
+
+    <ul class="figures">
+      <li><strong>4 ft</strong><span>on each side</span></li>
+      <li><strong>180 W</strong><span>at full sun, fully open</span></li>
+      <li><strong>5% to 100%</strong><span>closed to open</span></li>
+      <li><strong>Its own motor</strong><span>so it turns on its own</span></li>
+    </ul>
+
+    <div class="module-controls">
+      <label class="slider" for="open">
+        <span>Open</span>
+        <input id="open" type="range" min="5" max="100" step="1" value="60">
+        <output id="open-value" for="open">60%</output>
+      </label>
+      <div class="module-buttons">
+        <button class="btn" type="button" id="explode" aria-pressed="false">Take it apart</button>
+        <a class="btn btn-quiet" href="day.html">Back to the day</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Girasol Facade. A speculative design concept by Francisco Herrero.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/menu.js"></script>
+  <script type="module" src="js/module.js"></script>
+</body>
+</html>

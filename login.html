@@ -19,11 +19,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&family=Inter:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body class="login">
 
-  <!-- The 3D facade will render here in a later step -->
-  <div class="login-stage" role="img" aria-label="The Girasol facade, its triangular solar modules slowly opening and closing behind frosted glass."></div>
+  <div class="login-stage">
+    <canvas id="model" class="model-canvas" role="img"
+      aria-label="The Girasol facade, its triangular solar modules slowly opening and closing behind frosted glass."></canvas>
+  </div>
   <div class="login-frost" aria-hidden="true"></div>
 
   <main class="login-main">
@@ -59,5 +69,13 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/login.js"></script>
+  <script type="module">
+    import { createFacade } from "./js/model.js";
+    try {
+      createFacade(document.getElementById("model"), { mode: "breathe", time: 0.2 });
+    } catch (error) {
+      // No WebGL: the frosted card works on its own
+    }
+  </script>
 </body>
 </html>

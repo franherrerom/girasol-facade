@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" class="auth-pending">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Day | Girasol Facade</title>
+  <meta name="description" content="Scroll from sunrise to night and watch Girasol's facade collect a day's energy.">
+
+  <meta property="og:title" content="A Day with Girasol">
+  <meta property="og:description" content="The building follows the sun all day to make its own energy.">
+  <meta property="og:url" content="https://girasol-facade.vercel.app/day.html">
+  <meta property="og:image" content="https://girasol-facade.vercel.app/images/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Placeholder for an image of the Girasol facade opening at noon.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&family=Inter:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="day">
+
+  <nav class="site-nav" aria-label="Main">
+    <a class="brand" href="index.html">Girasol</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-list">Menu</button>
+    <ul id="menu-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="day.html" aria-current="page">A Day</a></li>
+      <li><a href="module.html">The Module</a></li>
+      <li><button type="button" data-logout>Log out</button></li>
+    </ul>
+  </nav>
+
+  <div class="stage">
+    <canvas id="model" class="model-canvas" role="img"
+      aria-label="The Girasol facade through one day. As you scroll, the sun crosses the sky, the triangular modules open and glow, golden light flows down into the building, and at noon the building separates into its layers. Select a triangle to see one module up close."></canvas>
+  </div>
+
+  <div class="day-corner">
+    <p class="hint" id="hint">Tap a triangle.</p>
+    <div class="counter">
+      <span class="counter-value" id="counter">0</span>
+      <span class="counter-label">kWh collected today</span>
+    </div>
+  </div>
+
+  <main class="chapters">
+
+    <section class="chapter" data-time="0" data-side="left" aria-labelledby="dawn">
+      <div class="chapter-text">
+        <p class="eyebrow">Dawn</p>
+        <h2 id="dawn">First light.</h2>
+        <p>The sun clears the horizon. 1,024 triangles wake up and turn to face it.</p>
+      </div>
+    </section>
+
+    <section class="chapter" data-time="0.25" data-side="right" aria-labelledby="morning">
+      <div class="chapter-text">
+        <p class="eyebrow">Morning</p>
+        <h2 id="morning">Open wide.</h2>
+        <p>Every module opens toward the sun. Open, the skin collects up to 2.6 times more energy than a closed, flat one.</p>
+        <div class="diagram" role="img" aria-label="Bar chart: a closed, flat skin collects 1 part of energy; the open skin following the sun collects up to 2.6 parts.">
+          <div class="bar-row">
+            <div class="bar-label"><span>Closed and flat</span><span>1×</span></div>
+            <div class="bar"><span style="--w: 38.5%"></span></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Open, following the sun</span><span>2.6×</span></div>
+            <div class="bar"><span style="--w: 100%"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter is-long" data-time="0.5" data-side="left" data-explode aria-labelledby="noon">
+      <div class="chapter-text">
+        <p class="eyebrow">Noon</p>
+        <h2 id="noon">Full power.</h2>
+        <p>At its peak the whole facade makes 184 kW. Here is how it's put together.</p>
+        <ol class="layers">
+          <li>Floor slabs on V-shaped columns</li>
+          <li>A diamond frame</li>
+          <li>Rhombus panels, 32 modules each</li>
+          <li>One module: a 4 ft triangle</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter" data-time="0.75" data-side="right" aria-labelledby="afternoon">
+      <div class="chapter-text">
+        <p class="eyebrow">Afternoon</p>
+        <h2 id="afternoon">Still following.</h2>
+        <p>The sun swings west and every module turns with it. Each one has its own small motor.</p>
+        <div class="diagram sum">
+          <strong>180 W</strong><span>per module</span>
+          <strong>× 1,024</strong><span>modules</span>
+          <strong>= 184 kW</strong><span>at peak</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-time="1" data-side="left" aria-labelledby="dusk">
+      <div class="chapter-text">
+        <p class="eyebrow">Dusk</p>
+        <h2 id="dusk">Closing time.</h2>
+        <p>As the light goes, the leaves fold back in. Slowly. Nothing here snaps.</p>
+      </div>
+    </section>
+
+    <section class="chapter" data-time="1.2" data-side="right" aria-labelledby="night">
+      <div class="chapter-text">
+        <p class="eyebrow">Night</p>
+        <h2 id="night">Lights out.</h2>
+        <p>Every module is closed. On a clear day the facade collects about 1,150 kWh. Enough to power about 40 homes for a day.</p>
+        <div class="diagram" role="img" aria-label="Forty squares, one for each home powered for a day.">
+          <div class="homes" id="homes"></div>
+        </div>
+        <div class="day-end">
+          <a class="btn" href="module.html">Meet one module</a>
+          <a class="btn btn-quiet" href="index.html">Back home</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    Girasol Facade. A speculative design concept by Francisco Herrero.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/menu.js"></script>
+  <script type="module" src="js/day.js"></script>
+</body>
+</html>

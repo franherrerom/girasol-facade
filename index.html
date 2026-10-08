@@ -19,12 +19,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&family=Inter:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body class="home">
 
   <nav class="site-nav" aria-label="Main">
     <a class="brand" href="index.html">Girasol</a>
-    <ul>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-list">Menu</button>
+    <ul id="menu-list">
       <li><a href="index.html" aria-current="page">Home</a></li>
       <li><a href="day.html">A Day</a></li>
       <li><a href="module.html">The Module</a></li>
@@ -32,11 +41,19 @@
     </ul>
   </nav>
 
-  <main class="home-main">
-    <!-- The 3D facade and the sun will render here in a later step -->
-    <div class="home-text">
+  <div class="stage">
+    <canvas id="model" class="model-canvas" tabindex="0" role="img"
+      aria-label="The Girasol facade, a wall of white triangular solar modules over a glass ground floor. Drag left or right, or use the arrow keys, to move the sun across the sky; every module opens and turns to follow it, and the sky changes with the time of day."></canvas>
+  </div>
+
+  <main class="home-main page-layer">
+    <div class="home-text reveal" id="home-text">
       <h1>Girasol</h1>
       <p class="key">The building follows the sun all day to make its own energy.</p>
+      <div class="home-actions">
+        <a class="btn" href="day.html">Watch a whole day</a>
+        <p class="hint" id="hint">Drag the sun.</p>
+      </div>
     </div>
   </main>
 
@@ -47,5 +64,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/menu.js"></script>
+  <script type="module" src="js/home.js"></script>
 </body>
 </html>

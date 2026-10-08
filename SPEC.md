@@ -81,8 +81,11 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - Plain HTML, CSS and JavaScript files only. No frameworks, no npm, no build step.
 - Supabase loads from its CDN script tag.
 - The 3D model uses Three.js, loaded from the jsDelivr CDN through an import map, pinned to one version. The model is built in code from simple shapes based on the geometry described in DESIGN.md. No 3D model files are required.
+  - Three.js is pinned to version 0.160.0.
+  - The facade is drawn as a field of 4 ft triangles over the 84 ft width and the 6 upper floors. Whole triangles only, so the model shows about 1,000 modules; the text always says 1,024.
+  - Building depth is not given. The model uses 48 ft as a visual stand-in. It is never stated on the site. (Ask Fran for the real depth.)
 - index.html sits at the top of the folder.
-- Suggested files: index.html, day.html, module.html, login.html, css/style.css, js/supabase-config.js, js/auth.js, js/login.js, js/model.js, js/home.js, js/day.js, js/module.js, images/.
+- Suggested files: index.html, day.html, module.html, login.html, css/style.css, js/supabase-config.js, js/auth.js, js/login.js, js/menu.js, js/model.js, js/home.js, js/day.js, js/module.js, images/.
 - It must work on a phone, including touch dragging of the sun and modules.
 - Published from GitHub to Vercel.
   - GitHub: https://github.com/franherrerom/girasol-facade (public). Every push to main deploys.

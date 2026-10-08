@@ -55,6 +55,9 @@ Headlines are short and bold. Body text is a sentence or two at most per block.
 - Home and The Module: free layout. The model fills the whole screen. Text floats over it in a corner, never covering the facade's centre.
 - A Day: alternating layout. The model sits on one side (7 columns), text and energy diagrams on the other (5 columns). The sides swap at each time of day as the visitor scrolls. The model stays on screen the whole time and moves across smoothly when sides swap.
 - On a phone, A Day stacks: the model is pinned to the top 55% of the screen, text scrolls below it.
+- Home on a wide screen: the building sits in the right 7 columns so the text in the lower-left corner never covers it. On a phone the building is lifted toward the top and the text sits below.
+- A Day: the energy counter and the "Tap a triangle." hint sit together in the bottom corner on the model's side, and move with it.
+- The Module on a phone: the module sits in the first screen; the figures and controls follow below it.
 - Airy throughout. Empty space is part of the design.
 
 ## Image treatment
