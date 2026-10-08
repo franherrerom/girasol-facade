@@ -1,0 +1,298 @@
+/* Girasol Facade: shared styles. Values come from DESIGN.md. */
+
+/* ---------- Tokens ---------- */
+:root {
+  /* Day cycle */
+  --dawn: #F4D3CC;
+  --noon: #F7F6F2;
+  --dusk: #F2A55E;
+  --night: #0E1A33;
+
+  /* Light */
+  --sun: #FFB547;
+  --energy: #FFD27A;
+
+  /* Ink and paper */
+  --ink: #1A1A1F;
+  --paper: #F7F6F2;
+
+  /* Placeholders */
+  --placeholder: #D9D9D9;
+  --placeholder-text: #4A4A4A;
+
+  /* Live colours, changed by script as the sun moves */
+  --bg: var(--dawn);
+  --text: var(--ink);
+  --btn-bg: var(--ink);
+  --btn-text: var(--paper);
+
+  /* Type */
+  --font-head: "Inter Tight", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --h1: clamp(48px, 9vw, 120px);
+  --h2: clamp(32px, 5vw, 64px);
+  --h3: 24px;
+  --body: 18px;
+  --small: 14px;
+
+  /* Spacing, 8px base */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 40px;
+  --s5: 64px;
+  --s6: 104px;
+  --s7: 168px;
+
+  /* Layout */
+  --max: 1440px;
+  --gutter: 24px;
+  --margin: 24px;
+
+  /* Movement */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-ui: 400ms;
+}
+
+@media (min-width: 900px) {
+  :root { --margin: 64px; }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--body);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: var(--font-head);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+}
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+
+p { margin: 0; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 var(--s3);
+  border: 0;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--t-ui) var(--ease),
+    filter var(--t-ui) var(--ease);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* Text-style button, for quiet actions like "Create account" */
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--small);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- Hint pill ---------- */
+.hint {
+  display: inline-block;
+  padding: var(--s1) var(--s2);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-size: var(--small);
+  font-weight: 500;
+  transition: opacity var(--t-ui) var(--ease);
+}
+.hint.is-done { opacity: 0; pointer-events: none; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  padding: var(--s3) var(--margin);
+  font-size: var(--small);
+}
+
+/* ---------- Placeholder images ---------- */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s3);
+  background: var(--placeholder);
+  color: var(--placeholder-text);
+  font-size: var(--small);
+  text-align: center;
+}
+
+/* ---------- Log-in page ---------- */
+.login {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+/* Stand-in for the 3D facade until the model is built: a soft sun glow */
+.login-stage {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 75% 25%, var(--sun) 0, rgba(255, 181, 71, 0.35) 18%, transparent 45%),
+    var(--bg);
+}
+
+/* Frosted glass over the facade */
+.login-frost {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  background: rgba(247, 246, 242, 0.25);
+}
+
+.login-main {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s5) var(--margin);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--s4);
+  border-radius: 24px;
+  background: rgba(247, 246, 242, 0.72);
+  color: var(--ink);
+  box-shadow: 0 24px 64px rgba(26, 26, 31, 0.12);
+}
+
+.login-card h1 {
+  font-size: clamp(48px, 9vw, 72px);
+}
+
+.login-card .key {
+  margin-top: var(--s2);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  margin-top: var(--s4);
+}
+
+.field label {
+  display: block;
+  margin-bottom: var(--s1);
+  font-size: var(--small);
+  font-weight: 500;
+}
+
+.field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--s2);
+  border: 1px solid rgba(26, 26, 31, 0.35);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* 16px stops phones zooming in on focus */
+}
+.field input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.login-form .btn { margin-top: var(--s1); }
+
+.form-message {
+  min-height: 1.5em;
+  font-size: var(--small);
+  font-weight: 500;
+}
+
+.login-switch {
+  margin-top: var(--s3);
+  font-size: var(--small);
+}
+
+.login .site-footer {
+  position: relative;
+  text-align: center;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
