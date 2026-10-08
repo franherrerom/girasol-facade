@@ -84,11 +84,13 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - Suggested files: index.html, day.html, module.html, login.html, css/style.css, js/supabase-config.js, js/auth.js, js/login.js, js/model.js, js/home.js, js/day.js, js/module.js, images/.
 - It must work on a phone, including touch dragging of the sun and modules.
 - Published from GitHub to Vercel.
+  - GitHub: https://github.com/franherrerom/girasol-facade (public). Every push to main deploys.
+  - Live: https://girasol-facade.vercel.app
 
 ## Images
 - Fran's files go in a folder called images.
 - Where there is no file, use a plain grey box labelled [ADD: image of ...].
-- Share image: images/share.jpg at 1200 by 630. Until Fran supplies it, use a grey placeholder labelled [ADD: image of the Girasol facade opening at noon].
+- Share image: images/share.jpg at 1200 by 630. Pages point to it with the full live address (https://girasol-facade.vercel.app/images/share.jpg) so it shows when the link is texted; this is the one exception to relative links. Until Fran supplies it, use a grey placeholder labelled [ADD: image of the Girasol facade opening at noon].
 - The 3D canvas on each page has a text alternative describing what it shows.
 
 ## Out of scope
