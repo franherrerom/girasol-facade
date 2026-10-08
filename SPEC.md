@@ -108,12 +108,14 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - Analytics, cookie banners, pop-ups.
 
 ## Done when
-- [ ] Works on a phone.
-- [ ] The menu reaches every page.
-- [ ] Sign up, log in and log out work.
-- [ ] Typing a page address (ending .html) while signed out sends me to log-in.
-- [ ] Every image has alt text.
-- [ ] The live link opens in a new tab or window.
-- [ ] The home opening plays on its own, then the sun can be dragged.
-- [ ] Clicking a triangle on A Day opens The Module with a smooth transition.
-- [ ] Concept figures match the list above on every page.
+- [x] Works on a phone. (Tested on a real phone.)
+- [x] The menu reaches every page, and the logo links home.
+- [x] Sign up, log in and log out work.
+- [x] Typing a page address (ending .html) while signed out sends me to log-in.
+- [x] Every new tab or fresh visit starts at the log-in page.
+- [x] Every image and 3D view has a text alternative.
+- [x] The live link opens in a new tab or window.
+- [x] The home opening plays on its own, the text follows shortly after, and the sun dial can be spun.
+- [x] Clicking a triangle on A Day opens The Module with a smooth transition.
+- [x] Concept figures match the list above on every page.
+- [ ] Real share image instead of the grey placeholder.
