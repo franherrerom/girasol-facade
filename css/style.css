@@ -129,13 +129,30 @@ a { color: inherit; }
   color: var(--text);
 }
 
-.site-nav .brand {
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: var(--h3);
-  letter-spacing: -0.03em;
-  text-decoration: none;
+/* ---------- Logo ---------- */
+.logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linejoin: round;
+  overflow: visible;
 }
+
+.site-nav .brand {
+  display: inline-flex;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform var(--t-ui) var(--ease);
+}
+.site-nav .brand:hover { transform: rotate(-12deg); }
+
+.login-logo { margin-bottom: var(--s3); }
+.login-logo .logo { width: 48px; height: 48px; }
 
 .site-nav ul {
   display: flex;
@@ -465,36 +482,154 @@ a { color: inherit; }
   overflow: hidden;
 }
 
-.home .stage canvas {
-  touch-action: none;
-  cursor: grab;
-}
-.home .stage canvas:active { cursor: grabbing; }
-
-/* Text floats in the lower-left corner, clear of the facade's centre.
-   The layer lets drags pass through to the model. */
+/* Title and text in the top-left corner, the sun dial in the bottom-left.
+   The layer lets the page behind stay clear of the facade. */
 .home-main {
   flex: 1;
   display: flex;
-  align-items: flex-end;
-  padding: var(--s6) var(--margin) var(--s3);
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s6) var(--margin) var(--s2);
   pointer-events: none;
 }
 .home-main a,
-.home-main button { pointer-events: auto; }
+.home-main button,
+.home-main .dial { pointer-events: auto; }
 
 .home-text { max-width: 560px; }
-@media (min-width: 760px) {
-  /* Stay inside the left 5 columns */
-  .home-text { max-width: min(560px, 40vw); }
-}
-.home-text .key { margin-top: var(--s2); }
+.home-text .key { margin-top: var(--s2); max-width: 26ch; }
 .home-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s2);
   margin-top: var(--s3);
+}
+@media (min-width: 760px) {
+  /* Stay inside the left 5 columns */
+  .home-text { max-width: min(560px, 40vw); }
+}
+
+/* The title: big, the letters rise one after another, the "o" is the logo mark */
+.title {
+  font-size: clamp(64px, 10vw, 168px);
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  margin-left: -0.04em;
+}
+.title-letters { display: inline-flex; align-items: baseline; }
+.title .ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45em) rotate(4deg);
+}
+.reveal.is-shown .title .ch {
+  animation: letter-rise 900ms var(--ease) both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+@keyframes letter-rise {
+  from { opacity: 0; transform: translateY(0.45em) rotate(4deg); }
+  to { opacity: 1; transform: none; }
+}
+.title .ch-mark {
+  width: 0.54em;
+  height: 0.54em;
+  margin: 0 0.01em 0 0.035em;
+  align-self: baseline;
+}
+.title-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 12;
+  stroke-linejoin: round;
+  transform: rotate(var(--sun-turn, 0deg));
+}
+.title-mark .logo-tri { fill: var(--sun); }
+
+/* ---------- Sun dial ---------- */
+.dial-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s2);
+}
+
+.dial {
+  --size: 200px;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  margin: var(--s3) 72px var(--s1);
+  border-radius: 50%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dial:active { cursor: grabbing; }
+.dial:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 6px;
+}
+
+.dial-face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+}
+.dial-ring { stroke-width: 1.5; }
+.dial-ring-inner { stroke-width: 1; stroke-dasharray: 2 4; }
+.dial-tick { stroke-width: 1.5; }
+.dial-tick.is-major { stroke-width: 2.5; }
+.dial-horizon { stroke-width: 1; opacity: 0.6; }
+.dial-sun {
+  fill: var(--sun);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.dial-label {
+  position: absolute;
+  font-size: var(--small);
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.dial-n { left: 50%; top: 0; transform: translate(-50%, -130%); }
+.dial-s { left: 50%; bottom: 0; transform: translate(-50%, 130%); }
+.dial-e { right: 0; top: 50%; transform: translate(calc(100% + 10px), -50%); }
+.dial-w { left: 0; top: 50%; transform: translate(calc(-100% - 10px), -50%); }
+
+.dial-time {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+@media (max-width: 759px) {
+  .home-main { padding-top: 88px; }
+  .dial-wrap { align-items: center; }
+  .dial-wrap { gap: var(--s1); }
+  .dial {
+    --size: 124px;
+    margin: var(--s3) 80px var(--s3);
+  }
+  .dial-time { font-size: 22px; }
 }
 
 /* ---------- A Day ---------- */

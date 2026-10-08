@@ -521,6 +521,21 @@ export function createFacade(canvas, options = {}) {
     scene.add(skyline.far.mesh, skyline.near.mesh);
   }
 
+  /* Ground: flat ground the colour of the sky, and a line at the building's base */
+  let ground = null;
+  if (options.ground) {
+    const flat = (color) => new THREE.MeshBasicMaterial({ color, toneMapped: false });
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(6000, 1200), flat(COLOR.dawn));
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.set(0, -0.05, -300);
+    const line = new THREE.Mesh(new THREE.PlaneGeometry(6000, 0.45), flat(COLOR.ink));
+    line.position.set(0, 0, 0.6);
+    // Draw the plane first so the line and the building always sit on top of it
+    plane.renderOrder = -1;
+    ground = { plane, line };
+    scene.add(plane, line);
+  }
+
   /* The sun */
   const sun = new THREE.Group();
   const sunDisc = new THREE.Mesh(
@@ -681,7 +696,7 @@ export function createFacade(canvas, options = {}) {
 
     const w = canvas.clientWidth || 1;
     const h = canvas.clientHeight || 1;
-    if (Math.abs(state.side) > 0.0005 || state.lift > 0) {
+    if (Math.abs(state.side) > 0.0005 || state.lift !== 0) {
       camera.setViewOffset(w, h, state.side * w, state.lift * h, w, h);
     } else {
       camera.clearViewOffset();
@@ -714,6 +729,11 @@ export function createFacade(canvas, options = {}) {
     updateModules(dt);
 
     const calm = 1 - state.explode;
+    if (ground) {
+      const sky = skyAt(state.t);
+      ground.plane.material.color.set(sky.bg);
+      ground.line.material.color.set(sky.text);
+    }
     if (skyline) {
       const tint = skylineColors(state.t);
       skyline.far.mat.color.set(tint.far);

@@ -17,9 +17,10 @@ Content: the facade model full screen behind a frosted panel, modules breathing.
 Purpose: wonder, then control.
 Content:
 - On load, the facade fills the screen fully closed. Over about 4 seconds the sun sweeps in and every module opens toward it in a wave. No text competes during this.
-- Then "Girasol" and the key sentence appear, followed by a hint pill: "Drag the sun."
-- The visitor drags the sun across the sky with mouse or finger. Every module turns and opens to follow it. The background moves through the day cycle with the sun's height.
-- The background never stands still: when nobody is dragging, the sun keeps moving on its own and a full day (dawn to night and round again) passes in about 45 seconds. Dragging takes over; a few seconds after letting go, the day carries on from there.
+- Then "Girasol" and the key sentence appear in the top-left corner, followed by a hint pill: "Spin the sun."
+- A sun dial in the bottom-left corner sets the time of day (0 to 24 h). The visitor spins it with mouse, finger or arrow keys. Every module turns and opens to follow the sun. The background moves through the day cycle with the sun's height.
+- The background never stands still: when nobody is spinning the dial, the day keeps moving on its own, about 30 seconds of daylight and 10 seconds of night. Spinning takes over; a few seconds after letting go, the day carries on from there.
+- A ground line runs the full width of the page at the base of the building.
 - Behind the building, a simple made-up city skyline in silhouette, tinted by the sky colour. Not a real city's skyline.
 - A link at the bottom: "Watch a whole day" leading to day.html.
 - Footer line.
@@ -48,7 +49,7 @@ Content:
 - Footer line.
 
 ### Every page
-- Top menu: Girasol, Home, A Day, The Module, Log out.
+- Top menu: the Girasol logo (links to Home), Home, A Day, The Module, Log out.
 - Footer: "Girasol Facade. A speculative design concept by Francisco Herrero."
 
 ## Concept figures (declared exception)

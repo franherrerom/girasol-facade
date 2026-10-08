@@ -43,6 +43,7 @@ Free Google Fonts only.
 
 Sizes:
 - H1: clamp(48px, 9vw, 120px)
+- Home title "Girasol": clamp(64px, 10vw, 168px), letter spacing -0.045em. The letters rise one after another when it appears, and the "o" is the logo mark, turning with the sun.
 - H2: clamp(32px, 5vw, 64px)
 - H3: 24px
 - Body: 18px
@@ -57,7 +58,8 @@ Headlines are short and bold. Body text is a sentence or two at most per block.
 - Home and The Module: free layout. The model fills the whole screen. Text floats over it in a corner, never covering the facade's centre.
 - A Day: alternating layout. The model sits on one side (7 columns), text and energy diagrams on the other (5 columns). The sides swap at each time of day as the visitor scrolls. The model stays on screen the whole time and moves across smoothly when sides swap.
 - On a phone, A Day stacks: the model is pinned to the top 55% of the screen, text scrolls below it.
-- Home on a wide screen: the building sits in the right 7 columns so the text in the lower-left corner never covers it. On a phone the building is lifted toward the top and the text sits below.
+- Home: the title, key sentence and button sit in the top-left corner; the sun dial sits in the bottom-left corner. On a wide screen the building sits in the right 7 columns. On a phone the building sits between the text and the dial, a little smaller.
+- Home ground line: a thin line in the text colour runs the full width of the page at the base of the building. Behind it the city sits on flat ground the colour of the sky.
 - A Day: the energy counter and the "Tap a triangle." hint sit together in the bottom corner on the model's side, and move with it.
 - The Module on a phone: the module sits in the first screen; the figures and controls follow below it.
 - Airy throughout. Empty space is part of the design.
@@ -78,11 +80,17 @@ Expressive, always smooth.
 ## Log-in page
 The facade sits full screen behind a frosted glass panel, its modules slowly breathing open and closed. A single card floats in the centre: the word Girasol in Inter Tight 800, the key sentence below it, then email and password fields and a Log in button. A quiet "Create account" toggle switches the same card to sign-up without leaving the page. On successful log-in the frost clears and the view moves into the home page.
 
+## Logo
+A hexagon with a triangle drawn through three of its corners (top, lower right, lower left), from Fran's sketch. Thin even lines in the text colour, round joins. It sits at the top left of every page in place of the word Girasol, links to Home, and also sits above the log-in card.
+
+## Sun dial (Home)
+A minimal clock ring in place of dragging the sun. Thin rings and 24 hour ticks in the text colour; the sun is a Sun-coloured dot on the ring with a 2px text-colour outline. Labels at the four quarters: 12 Noon (top), 6 Sunrise, 18 Sunset, 0 Midnight (bottom). Sunrise sits on the right and Sunset on the left, so the dot sits on the same side as the real sun over the south-facing facade. The current time shows in the centre. Spin it with mouse or finger; it carries on a little after letting go and eases to a stop. Arrow keys move it half an hour.
+
 ## Menu and buttons
-- Menu: a slim fixed bar across the top, transparent over the model. "Girasol" on the left. Home, A Day, The Module and Log out on the right. Text colour follows the day cycle for contrast.
+- Menu: a slim fixed bar across the top, transparent over the model. The logo on the left. Home, A Day, The Module and Log out on the right. Text colour follows the day cycle for contrast.
 - On a phone: a Menu button opens a full-screen overlay with the same links in large type.
 - Buttons: pill shaped, 48px tall, Ink fill with Paper text on light backgrounds, reversed at night. Hover lifts slightly and brightens. Focus shows a clear 2px outline.
-- Hints like "Drag the sun" or "Tap a triangle" appear as small pills that fade out once the visitor acts.
+- Hints like "Spin the sun" or "Tap a triangle" appear as small pills that fade out once the visitor acts.
 
 ## Tone of voice
 Short, confident, plain English. Present tense. One idea per line. No jargon, no architecture vocabulary the public won't know. A little dry wit is welcome. Numbers are stated with confidence.
