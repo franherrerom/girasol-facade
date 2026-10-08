@@ -509,6 +509,8 @@ a { color: inherit; }
 @media (min-width: 760px) {
   /* Stay inside the left 5 columns */
   .home-text { max-width: min(560px, 40vw); }
+  /* Keep the dial and its labels above the ground line */
+  .home-main { padding-bottom: var(--s5); }
 }
 
 /* The title: big, the letters rise one after another, the "o" is the logo mark */
@@ -609,6 +611,51 @@ a { color: inherit; }
 .dial-s { left: 50%; bottom: 0; transform: translate(-50%, 130%); }
 .dial-e { right: 0; top: 50%; transform: translate(calc(100% + 10px), -50%); }
 .dial-w { left: 0; top: 50%; transform: translate(calc(-100% - 10px), -50%); }
+
+/* Annotation: "Spin the sun" with an arrow pointing down at the ring */
+.dial-note {
+  position: absolute;
+  left: 64%;
+  bottom: 76%;
+  width: 160px;
+  height: 84px;
+  pointer-events: none;
+  transition: opacity var(--t-ui) var(--ease);
+}
+.dial-note.is-done { opacity: 0; }
+.dial-note-text {
+  position: absolute;
+  top: 0;
+  left: 52px;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.dial-note-arrow {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 64px;
+  height: 52px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The arrow draws itself in once the dial has appeared */
+.dial-note .arrow-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 900ms var(--ease) 900ms;
+}
+.dial-note .arrow-head {
+  opacity: 0;
+  transition: opacity 300ms var(--ease) 1600ms;
+}
+.is-shown .dial-note .arrow-line { stroke-dashoffset: 0; }
+.is-shown .dial-note .arrow-head { opacity: 1; }
 
 .dial-time {
   position: absolute;

@@ -90,7 +90,8 @@ A minimal clock ring in place of dragging the sun. Thin rings and 24 hour ticks 
 - Menu: a slim fixed bar across the top, transparent over the model. The logo on the left. Home, A Day, The Module and Log out on the right. Text colour follows the day cycle for contrast.
 - On a phone: a Menu button opens a full-screen overlay with the same links in large type.
 - Buttons: pill shaped, 48px tall, Ink fill with Paper text on light backgrounds, reversed at night. Hover lifts slightly and brightens. Focus shows a clear 2px outline.
-- Hints like "Spin the sun" or "Tap a triangle" appear as small pills that fade out once the visitor acts.
+- Hints like "Tap a triangle" appear as small pills that fade out once the visitor acts.
+- On Home the hint is an annotation instead of a pill: "Spin the sun" in Inter 500, 16px, above and to the right of the dial, with a thin curved arrow in the text colour pointing down at the ring. The arrow draws itself in when the dial appears, and the note fades out once the visitor spins.
 
 ## Tone of voice
 Short, confident, plain English. Present tense. One idea per line. No jargon, no architecture vocabulary the public won't know. A little dry wit is welcome. Numbers are stated with confidence.
