@@ -552,6 +552,8 @@ a { color: inherit; }
 .title-mark .logo-tri { fill: var(--sun); }
 
 /* ---------- Sun dial ---------- */
+/* The dial fades in just after the title */
+.dial-wrap.reveal { transition-delay: 300ms; }
 .dial-wrap {
   display: flex;
   flex-direction: column;

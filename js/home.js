@@ -19,6 +19,7 @@ const MORNING = 0.3;        // where the opening ends
 const DAY_RATE = 12 / 30;   // hours per second from 6 to 18: 30 seconds of daylight
 const NIGHT_RATE = 12 / 10; // hours per second at night: 10 seconds of dark
 const RESUME_AFTER = 5000;  // ms after the last spin before the day moves again
+const TEXT_DELAY = 900;     // ms after the model appears before the text fades in
 const FRICTION = 2.5;       // how quickly a spin slows down
 
 // Model time t: 0 sunrise (6 h), 0.5 noon (12 h), 1 sunset (18 h)
@@ -120,10 +121,12 @@ try {
       applySky(state.t);
       tick();
     },
-    onIntroEnd: showText
+    // The text follows the model shortly, while the opening plays
+    onReady: () => setTimeout(showText, TEXT_DELAY),
+    onIntroEnd: () => {
+      lastTouch = performance.now() - RESUME_AFTER; // the day carries on straight away
+    }
   });
-  // With reduced motion there is no opening sequence
-  if (!facade.isIntroPlaying()) showText();
 
   // Wide screens: the building sits in the right 7 columns, clear of the text.
   // Phones: a little smaller, between the text and the dial.
@@ -166,7 +169,8 @@ let lastAngle = 0;
 let lastMove = 0;
 
 dial.addEventListener("pointerdown", (event) => {
-  if (facade && facade.isIntroPlaying()) return;
+  // Spinning during the opening takes over straight away
+  if (facade && facade.isIntroPlaying()) facade.endIntro();
   dragging = true;
   velocity = 0;
   lastAngle = pointerAngle(event);
@@ -206,10 +210,10 @@ dial.addEventListener("pointerup", release);
 dial.addEventListener("pointercancel", release);
 
 dial.addEventListener("keydown", (event) => {
-  if (facade && facade.isIntroPlaying()) return;
   const steps = { ArrowUp: 0.5, ArrowRight: 0.5, ArrowDown: -0.5, ArrowLeft: -0.5, PageUp: 3, PageDown: -3 };
   if (!(event.key in steps)) return;
   event.preventDefault();
+  if (facade && facade.isIntroPlaying()) facade.endIntro();
   velocity = 0;
   setHour(hour + steps[event.key]);
   act();

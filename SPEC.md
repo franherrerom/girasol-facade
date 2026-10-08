@@ -16,8 +16,8 @@ Content: the facade model full screen behind a frosted panel, modules breathing.
 ### index.html (Home)
 Purpose: wonder, then control.
 Content:
-- On load, the facade fills the screen fully closed. Over about 4 seconds the sun sweeps in and every module opens toward it in a wave. No text competes during this.
-- Then "Girasol" and the key sentence appear in the top-left corner, followed by a hint pill: "Spin the sun."
+- On load, the facade fills the screen fully closed. Over about 4 seconds the sun sweeps in and every module opens toward it in a wave.
+- About a second after the model appears, while the opening is still playing, "Girasol", the key sentence and the sun dial fade in smoothly in the top-left and bottom-left corners, followed by a hint pill: "Spin the sun." Spinning the dial before the opening ends takes over straight away.
 - A sun dial in the bottom-left corner sets the time of day (0 to 24 h). The visitor spins it with mouse, finger or arrow keys. Every module turns and opens to follow the sun. The background moves through the day cycle with the sun's height.
 - The background never stands still: when nobody is spinning the dial, the day keeps moving on its own, about 30 seconds of daylight and 10 seconds of night. Spinning takes over; a few seconds after letting go, the day carries on from there.
 - A ground line runs the full width of the page at the base of the building.

@@ -769,6 +769,7 @@ export function createFacade(canvas, options = {}) {
     if (!state.ready) {
       state.ready = true;
       canvas.classList.add("is-ready");
+      options.onReady && options.onReady();
     }
     requestAnimationFrame(frame);
   }
@@ -830,6 +831,12 @@ export function createFacade(canvas, options = {}) {
       resize();
     },
     isIntroPlaying: () => state.intro !== null,
+    // Stop the opening where it is and hand over control
+    endIntro() {
+      if (state.intro === null) return;
+      state.intro = null;
+      options.onIntroEnd && options.onIntroEnd();
+    },
     pick,
     flyTo
   };
