@@ -98,7 +98,7 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 ## Images
 - Fran's files go in a folder called images.
 - Where there is no file, use a plain grey box labelled [ADD: image of ...].
-- Share image: images/share.jpg at 1200 by 630. Pages point to it with the full live address (https://girasol-facade.vercel.app/images/share.jpg) so it shows when the link is texted; this is the one exception to relative links. Until Fran supplies it, use a grey placeholder labelled [ADD: image of the Girasol facade opening at noon].
+- Share image: images/share.jpg at 1200 by 630. Pages point to it with the full live address (https://girasol-facade.vercel.app/images/share.jpg) so it shows when the link is texted; this is the one exception to relative links. It shows the Girasol wordmark from Home: "Girasol" in Inter Tight 800, Ink on Noon, with the "o" drawn as the logo mark (the hexagon around an upright Sun-coloured triangle). Alt text: "The Girasol logo: the word Girasol with the o drawn as a hexagon around a sun-yellow triangle."
 - The 3D canvas on each page has a text alternative describing what it shows.
 
 ## Out of scope
@@ -118,4 +118,4 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - [x] The home opening plays on its own, the text follows shortly after, and the sun dial can be spun.
 - [x] Clicking a triangle on A Day opens The Module with a smooth transition.
 - [x] Concept figures match the list above on every page.
-- [ ] Real share image instead of the grey placeholder.
+- [x] Real share image: the Girasol wordmark.
