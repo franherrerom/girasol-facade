@@ -17,7 +17,7 @@ const FORMS = ['Flat wall', 'Curved wall', 'Wave wall', 'Sloped wall', 'Round to
 
 export const parameters = {
   form:   { label: 'Building form',         value: 'Flat wall', options: FORMS, help: 'The surface the skin wraps' },
-  module: { label: 'Module shape',          value: 'Triangle', options: ['Triangle', 'Diamond', 'Hexagon'], help: 'One leaf per side, all opening toward the light' },
+  module: { label: 'Module shape',          value: 'Triangle', options: ['Triangle', 'Diamond', 'Square', 'Hexagon'], help: 'One leaf per side, all opening toward the light' },
   facing: { label: 'Facing',                value: 0,   min: -180, max: 180, step: 15, type: 'angle', help: '0 = south, 90 = west, -90 = east' },
   width:  { label: 'Width or diameter',     value: 84,  min: 48, max: 120, step: 4, type: 'length' },
   floors: { label: 'Floors behind the skin', value: 6,  min: 3,  max: 24,  step: 1 },
@@ -37,7 +37,8 @@ const LAT = 25.8;                  // Miami, degrees north
 const DECL = { June: 23.4, March: 0, December: -23.4 }; // sun declination, degrees
 const OPEN_MIN = 5;                // % (fully closed still leaves a sliver)
 const MAX_ANGLE = 72;              // degrees at 100% open
-const INNER = 0.82;                // leaves sit inside the frame
+const FRAME_W = 0.21;              // frame width, ft (about 2.5 in), the same on every shape so they sit tight
+const FRAME_PRINT = 0.32;          // thicker frame in the print version
 const LEAF = 0.94;                 // leaf size against its space
 const EYE_LOW = 3, EYE_HIGH = 7;   // eye level, ft above each floor (used by the view rules)
 const SUN_NONE = 0.1, SUN_FULL = 0.5; // sun on a face: below this it stays closed, above this it is fully open
@@ -45,11 +46,16 @@ const SLOPE = 20;                  // the sloped wall leans back this many degre
 const RAD = Math.PI / 180;
 
 // Module shapes: a regular polygon with one triangular leaf hinged on each side.
-const SHAPES = { Triangle: 3, Diamond: 4, Hexagon: 6 };
-const sidesOf = (p) => SHAPES[p.module] || 3;
+// start: where the first corner sits, in degrees from the right. Diamonds stand on a corner; squares sit flat.
+const SHAPES = { Triangle: { n: 3, start: 90 }, Diamond: { n: 4, start: 90 }, Square: { n: 4, start: 45 }, Hexagon: { n: 6, start: 90 } };
+const shapeOf = (p) => SHAPES[p.module] || SHAPES.Triangle;
+const sidesOf = (p) => shapeOf(p).n;
+const startOf = (p) => shapeOf(p).start * RAD;
 const circR = (p) => p.side / (2 * Math.sin(Math.PI / sidesOf(p)));          // center to corner
 const apothem = (p) => circR(p) * Math.cos(Math.PI / sidesOf(p));            // center to side
-const innerAp = (p) => apothem(p) * INNER;
+// The opening inside the frame, as a share of the module (so a big hexagon gets the same thin frame as a small triangle).
+const innerOf = (p, w = FRAME_W) => Math.max(0.5, 1 - w / apothem(p));
+const innerAp = (p) => apothem(p) * innerOf(p);
 
 // Where the sun is, as a direction (x east, y up, z south).
 function sunAt(hour, season) {
@@ -153,6 +159,7 @@ function layout(p) {
   const spots = [];                    // [u, v, turn]
   let pitch, vStep, rows, firstV;
   if (n === 3) { pitch = s; vStep = (s * Math.sqrt(3)) / 2; }
+  else if (p.module === 'Square') { pitch = s; vStep = s; }
   else if (n === 4) { pitch = s * Math.SQRT2; vStep = pitch / 2; }
   else { pitch = s * Math.sqrt(3); vStep = 1.5 * s; }
   const nU = S.closed ? Math.max(3, Math.round(L / pitch)) : 0;
@@ -173,11 +180,11 @@ function layout(p) {
     }
     firstV = 0;
   } else {
-    const tall = n === 4 ? pitch : 2 * s;
+    const tall = n === 6 ? 2 * s : pitch;          // diamond: corner to corner; square: one side; hexagon: corner to corner
     rows = Math.max(1, Math.floor((H - tall) / vStep) + 1);
     firstV = tall / 2;
     for (let r = 0; r < rows; r++) {
-      const v = firstV + r * vStep, off = (r % 2) * (su / 2);
+      const v = firstV + r * vStep, off = p.module === 'Square' ? 0 : (r % 2) * (su / 2); // squares stack straight
       const count = S.closed ? nU : Math.ceil(L / su) + 2;
       for (let k = 0; k < count; k++) {
         const u = off + k * su + (S.closed ? 0 : su / 2);
@@ -189,7 +196,7 @@ function layout(p) {
     const f = S.place(u, v);
     return { u, v, turn, ...f, eye: isEye(f.P[1]) };
   });
-  const skinH = n === 3 ? rows * vStep : (rows - 1) * vStep + (n === 4 ? pitch : 2 * s);
+  const skinH = n === 3 ? rows * vStep : (rows - 1) * vStep + (n === 6 ? 2 * s : pitch);
   const value = { mods, rows, ku, H: skinH, top: FLOOR + skinH * S.cb, L, rise: n === 4 ? 1 : Math.sqrt(3), pitch: su };
   layoutCache = { key, value };
   return value;
@@ -199,7 +206,7 @@ const dot = (a, s) => a[0] * s.x + a[1] * s.y + a[2] * s.z;
 const sunOnFace = (m, s) => (s.y > 0 ? Math.max(0, dot(m.N, s)) : 0);
 const petalAngles = (p) => {
   const n = sidesOf(p), out = [];
-  for (let k = 0; k < n; k++) out.push(Math.PI / 2 + (k + 0.5) * (2 * Math.PI) / n + Math.PI / 2); // start at the top corner
+  for (let k = 0; k < n; k++) out.push(startOf(p) + (k + 0.5) * (2 * Math.PI) / n + Math.PI / 2); // one leaf per side
   return out;
 };
 
@@ -213,13 +220,13 @@ function sample(mods, max = 500) {
 
 // ---------- rule math ----------
 const holeInches = (p, open) => 2 * innerAp(p) * (1 - LEAF * Math.cos(angleOf(open) * RAD)) * 12;
-const clearShare = (open) => INNER * INNER * (1 - LEAF * LEAF * Math.cos(angleOf(open) * RAD));
+const clearShare = (p, open) => innerOf(p) ** 2 * (1 - LEAF * LEAF * Math.cos(angleOf(open) * RAD));
 const CELL_SHARE = 0.72 * 0.72, CELL_EFF = 0.2;   // assumptions: cell covers this much of a leaf; 20% efficient
 const SQFT_TO_M2 = 0.0929;
 // Strength of direct sun on a clear day (W per sq m). A rough formula from the sun's height.
 const directSun = (y) => (y <= 0.02 ? 0 : 1000 * Math.pow(0.7, Math.pow(1 / y, 0.678)));
 const leafSqFt = (p) => {
-  const n = sidesOf(p), edge = 2 * circR(p) * INNER * Math.sin(Math.PI / n);
+  const n = sidesOf(p), edge = 2 * circR(p) * innerOf(p) * Math.sin(Math.PI / n);
   return 0.5 * edge * LEAF * innerAp(p) * LEAF;
 };
 
@@ -270,7 +277,7 @@ export function generate(p, kit) {
   const S = surface(p);
   const { mods, ku, H, top, L, rise, pitch } = layout(p);
   const n = sidesOf(p);
-  const inner = p.print ? 0.72 : INNER;
+  const inner = p.print ? innerOf(p, FRAME_PRINT) : innerOf(p);
   const frameDepth = p.print ? 0.6 : 0.35;
   const leafT = p.print ? 0.36 : 0.06; // print: about 1.1 mm at 1:96
   const skin = [];                      // everything that turns with Facing
@@ -279,7 +286,7 @@ export function generate(p, kit) {
   const poly = (scale) => {
     const c = new THREE.Shape();
     for (let k = 0; k < n; k++) {
-      const a = Math.PI / 2 + (k * 2 * Math.PI) / n;
+      const a = startOf(p) + (k * 2 * Math.PI) / n;
       const x = R * scale * Math.cos(a), y = R * scale * Math.sin(a);
       if (k === 0) c.moveTo(x, y); else c.lineTo(x, y);
     }
@@ -433,7 +440,7 @@ export function check(p) {
   const eye = eyeOpening(p);
   const hole = holeInches(p, eye);
   if (hole < 6) w.push(`People rule: the view hole at eye level is ${hole.toFixed(1)} in. It must be at least 6 in so people inside can see out.`);
-  const clear = clearShare(eye) * 100;
+  const clear = clearShare(p, eye) * 100;
   if (clear < 25) w.push(`People rule: only ${clear.toFixed(0)}% of the facade is clear at eye level. It must be at least 25%.`);
   const day = dayCatch(p);
   if (day.ratio < 1) w.push(`The skin catches ${day.ratio.toFixed(2)} times the sun of the same surface closed flat, on a clear ${p.season} day. It must be at least 1, or opening costs energy.`);
@@ -452,7 +459,7 @@ export function stats(p) {
   const day = dayCatch(p);
   return {
     'Eye-level view hole (in)': holeInches(p, eyeOpening(p)),
-    'Eye-level clear view (%)': clearShare(eyeOpening(p)) * 100,
+    'Eye-level clear view (%)': clearShare(p, eyeOpening(p)) * 100,
     'Day catch vs closed skin (x)': day.ratio,
     'Clear-day energy (kWh, est.)': day.kWh,
     'Best-case module (W, est.)': day.moduleW,

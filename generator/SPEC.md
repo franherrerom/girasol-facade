@@ -35,7 +35,7 @@ The people working on the floors behind the skin, who need to see out. The build
 | Slider | What it changes | From | To | Units | Why it matters to the design |
 |---|---|---|---|---|---|
 | Building form | The surface the skin wraps: flat, curved, wave or sloped wall, round or square tower | - | - | - | Shows the skin works on any surface, not only one flat wall |
-| Module shape | Triangle, diamond or hexagon, one leaf per side | - | - | - | Same idea, different pattern; bigger shapes see out more but leaves reach further |
+| Module shape | Triangle, diamond, square or hexagon, one leaf per side | - | - | - | Same idea, different pattern; bigger shapes see out more but leaves reach further |
 | Facing | Which way the building turns | -180 | 180 | degrees | 0 is south; turning it changes which faces get sun |
 | Facade width | The wall the skin covers (the diameter on a tower) | 48 | 120 | ft | From a mid-block building to a full frontage |
 | Floors behind the skin | How tall the skin is | 3 | 24 | floors | My building has 6; towers go higher; taller means more motors |
@@ -50,7 +50,7 @@ The slider I care about most is Building form, because it shows the same skin an
 Open with the sun is a checkbox: when it's on, every module reads the sun on its own face. Where direct sun hits it squarely it opens all the way to the Opening; where it is in shade (or the sun is behind it) it closes. It is the same rule on every surface. Print version is a checkbox that thickens thin parts.
 
 ## 5. What stays fixed
-Miami (latitude 25.8); the facade faces south unless I turn it with Facing. Floor-to-floor is 13.7 ft (96 ft over 7 storeys). Ground floor is glazed; the skin starts above it. Every module is a regular shape (triangle, diamond or hexagon) with a frame, one hinged leaf per side and solar cells on the leaves. A module counts as in full sun when the sun is within about 60 degrees of straight on (assumption), and as in shade below about 84 degrees. Leaves open up to 72 degrees. Building depth is 48 ft (a stand-in; I haven't designed it).
+Miami (latitude 25.8); the facade faces south unless I turn it with Facing. Floor-to-floor is 13.7 ft (96 ft over 7 storeys). Ground floor is glazed; the skin starts above it. Every module is a regular shape (triangle, diamond, square or hexagon) with a frame, one hinged leaf per side and solar cells on the leaves. A module counts as in full sun when the sun is within about 60 degrees of straight on (assumption), and as in shade below about 84 degrees. Leaves open up to 72 degrees. Building depth is 48 ft (a stand-in; I haven't designed it).
 
 ## 6. What must stay true (your rules)
 1. **People rule, view (the one that matters most to me):** at eye level (3 to 7 ft above each floor), the clear hole you see through a module is never under 6 in. Seated eye height is about 4 ft.

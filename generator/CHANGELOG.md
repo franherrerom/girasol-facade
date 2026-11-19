@@ -12,6 +12,18 @@ Format:
 
 ---
 
+## 2026-11-19: Hexagon back, sitting tight
+- **I asked for:** I liked the hexagons; they were too separated, too much space between them.
+- **What changed:** Hexagon is back next to Square (Triangle, Diamond, Square, Hexagon). The frame used to be a share of each module's size, so big hexagons got a thick frame that doubled up between neighbors. Now every frame is the same real width, about 2.5 in, so hexagons, diamonds and squares sit as tight as the triangles. The view and energy numbers use the new opening.
+- **Assumptions:** Frame 0.21 ft (0.32 ft in the print version). At 4 ft triangles this matches the old frame.
+- **Still not right:** Big hexagons have long leaves, so the leaf-reach rule warns unless the module side is smaller.
+
+## 2026-11-19: Square instead of hexagon
+- **I asked for:** I don't like the hexagon; it doesn't fit together cleanly.
+- **What changed:** Module shape is now Triangle, Diamond or Square. Squares sit flat in a straight grid, so the edges of a wall come out clean. Four leaves, one per side, like the diamond.
+- **Assumptions:** The diagrid on squares runs at 45 degrees, through the corners.
+- **Still not right:** Saved variations that used Hexagon (none were exported) would fall back to Triangle.
+
 ## 2026-11-19: Removed the eye-level band
 - **I asked for:** Remove the eye-level band; I didn't want it.
 - **What changed:** The Eye-level band slider is gone. Every module now follows only the sun rule. The view rules still check the modules at eye level (3 to 7 ft above each floor).
