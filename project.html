@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Generator | Girasol Facade</title>
+  <meta name="description" content="A 3D tool for the Girasol solar skin on any surface: walls, curves and towers. Every module opens where the Miami sun hits it and closes in shade.">
+
+  <meta property="og:title" content="The Girasol Facade Generator">
+  <meta property="og:description" content="A solar skin for any surface. Every module opens where the sun hits it and closes in shade.">
+  <meta property="og:url" content="https://girasol-facade.vercel.app/project.html">
+  <meta property="og:image" content="https://girasol-facade.vercel.app/images/share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Girasol logo: the word Girasol with the o drawn as a hexagon around a sun-yellow triangle.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap">
+
+  <!-- This page follows the look of my portfolio (franherrero.com): its teal, its type and its motion. Its styles live here, not in css/style.css. -->
+  <style>
+    :root {
+      --paper: #fbfbfa;
+      --ink: #17181a;
+      --text: #45474a;
+      --grey: #8a8c8e;
+      --rule: #e4e4e0;
+      --teal: #0d8b87;
+      --teal-soft: #e3f1f0;
+      --sun: #f2b340;
+      --mono: 'Roboto Mono', ui-monospace, monospace;
+      --pad: 48px;
+      --title: 1fr auto;
+      --title-gap: 64px;
+      --doc: 88px minmax(0, 760px) 1fr;
+      --forms: repeat(3, minmax(0, 1fr));
+      --nums: repeat(3, minmax(0, 1fr));
+      --ease: cubic-bezier(.16, .84, .24, 1);
+    }
+    @media (max-width: 768px) {
+      :root {
+        --pad: 20px;
+        --title: minmax(0, 1fr);
+        --title-gap: 20px;
+        --doc: minmax(0, 1fr);
+        --forms: repeat(2, minmax(0, 1fr));
+        --nums: minmax(0, 1fr);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Archivo, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { margin: 0; font: inherit; }
+    a { color: var(--ink); text-decoration: none; }
+    a:hover { color: var(--teal); }
+    a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+    ::selection { background: var(--teal); color: #fff; }
+
+    /* Top bar, with a teal line that fills as you scroll */
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(251, 251, 250, 0.92); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 10px 24px;
+      padding: 18px var(--pad);
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--grey);
+    }
+    .bar b { color: var(--teal); font-weight: 500; }
+    .progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: var(--teal); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+    @media (max-width: 768px) { .bar-tag { display: none; } }
+
+    /* Title */
+    .title {
+      display: grid; grid-template-columns: var(--title); align-items: end; gap: var(--title-gap);
+      padding: 110px var(--pad) 56px;
+    }
+    .title h1 {
+      font-size: clamp(52px, 8.5vw, 132px); line-height: 0.92; letter-spacing: 0.09em; font-weight: 500;
+    }
+    .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.04em; white-space: nowrap; }
+    @media (max-width: 768px) { .title h1 { font-size: 11vw; } }
+    .glyph { display: inline-block; animation: glyph 1100ms var(--ease) both; animation-delay: calc(120ms + var(--i) * 45ms); }
+    .glyph.teal { color: var(--teal); }
+    @keyframes glyph { from { transform: translateY(105%) rotate(3deg); } to { transform: none; } }
+    .subtitle { font-family: var(--mono); font-size: 15px; letter-spacing: 0.1em; color: var(--grey); margin-top: 22px; animation: fade 900ms 700ms both; }
+    .grow { height: 2px; width: 120px; background: var(--teal); margin-top: 28px; transform-origin: 0 50%; animation: grow 1000ms 900ms var(--ease) both; }
+    @keyframes grow { from { transform: scaleX(0); } to { transform: none; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .lead { font-size: 17px; line-height: 1.65; max-width: 62ch; margin: 26px 0 0; color: var(--text); text-wrap: pretty; animation: rise 1000ms 1000ms var(--ease) both; }
+    .facts {
+      font-family: var(--mono); font-size: 12px; line-height: 2; letter-spacing: 0.06em; color: var(--grey);
+      text-align: right; padding-bottom: 10px; animation: fade 900ms 1200ms both;
+    }
+    .facts span { color: var(--teal); }
+    @media (max-width: 768px) { .facts { text-align: left; } }
+    .cta {
+      display: inline-flex; align-items: center; gap: 12px; margin-top: 34px;
+      background: var(--teal); color: #fff; padding: 14px 22px; border-radius: 999px;
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      animation: rise 1000ms 1150ms var(--ease) both;
+    }
+    .cta:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 10px 24px -10px var(--teal); }
+    .cta i { font-style: normal; transition: transform 300ms var(--ease); }
+    .cta:hover i { transform: translateX(4px); }
+
+    /* The living skin: modules open where the sun passes */
+    .skin { position: relative; height: clamp(260px, 38vw, 480px); background: var(--teal-soft); overflow: hidden; }
+    .skin canvas { display: block; width: 100%; height: 100%; }
+    .skin-tag {
+      position: absolute; left: var(--pad); bottom: 18px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink);
+      background: rgba(251, 251, 250, 0.85); padding: 7px 10px;
+    }
+    .skin-tag b { color: var(--teal); font-weight: 500; }
+
+    /* Text sections: mono label on the left, text in a reading column */
+    .doc { display: grid; grid-template-columns: var(--doc); gap: 40px; padding: 110px var(--pad) 0; }
+    .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); padding-top: 8px; }
+    .big { font-size: 25px; line-height: 1.55; margin: 0 0 26px; text-wrap: pretty; }
+    .big em { font-style: normal; color: var(--teal); }
+    .body { font-size: 19px; line-height: 1.7; margin: 0 0 22px; color: var(--text); text-wrap: pretty; }
+    .body:last-child { margin-bottom: 0; }
+    .sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey); margin: 40px 0 16px; }
+    .sub:first-child { margin-top: 0; }
+    .rules { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); counter-reset: rule; }
+    .rules li {
+      counter-increment: rule; position: relative;
+      display: grid; grid-template-columns: 44px 1fr; gap: 12px;
+      padding: 16px 0; border-bottom: 1px solid var(--rule);
+      font-size: 19px; line-height: 1.55; color: var(--text);
+      transition: color 300ms, padding-left 300ms var(--ease);
+    }
+    .rules li::before { content: counter(rule, decimal-leading-zero); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--teal); padding-top: 5px; }
+    .rules li:hover { color: var(--ink); padding-left: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .chips li {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink);
+      border: 1px solid var(--rule); border-radius: 999px; padding: 7px 12px; background: #fff;
+      transition: border-color 300ms, color 300ms, transform 300ms var(--ease);
+    }
+    .chips li:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+    /* Any surface: six plans, one sun */
+    .wide { padding: 110px var(--pad) 0; }
+    .wide-head { display: grid; grid-template-columns: var(--doc); gap: 40px; margin-bottom: 40px; }
+    .forms { display: grid; grid-template-columns: var(--forms); gap: 20px; }
+    .form { background: #fff; border: 1px solid var(--rule); transition: border-color 400ms, transform 400ms var(--ease); }
+    .form:hover { border-color: var(--teal); transform: translateY(-4px); }
+    .form canvas { display: block; width: 100%; aspect-ratio: 1 / 1; }
+    .form figcaption {
+      display: flex; justify-content: space-between; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--rule);
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink);
+    }
+    .form figcaption span { color: var(--grey); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--grey); }
+    .legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 8px; }
+
+    /* Numbers */
+    .nums { display: grid; grid-template-columns: var(--nums); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 44px; }
+    .num { padding: 28px 24px 28px 0; }
+    .num + .num { border-left: 1px solid var(--rule); padding-left: 24px; }
+    @media (max-width: 768px) { .num + .num { border-left: 0; border-top: 1px solid var(--rule); padding-left: 0; } }
+    .num b { display: block; font-size: clamp(40px, 5vw, 64px); font-weight: 500; letter-spacing: 0.02em; color: var(--teal); line-height: 1; }
+    .num s { font-family: var(--mono); font-size: 13px; color: var(--grey); text-decoration-color: var(--grey); }
+    .num span { display: block; margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); }
+
+    /* Tool */
+    .tool {
+      display: block; width: 100%; height: 82vh; min-height: 520px;
+      border: 1px solid var(--rule); background: #fff;
+    }
+    .caption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--grey); margin-top: 16px; line-height: 1.7; }
+    .caption a { color: var(--teal); border-bottom: 1px solid var(--teal); }
+
+    /* Footer */
+    .foot {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 20px 28px;
+      padding: 140px var(--pad) 100px; margin-top: 110px; border-top: 1px solid var(--rule);
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey);
+    }
+    .foot b { color: var(--teal); font-weight: 500; }
+
+    /* Reveal on scroll. Hidden only once the script has run, so without it everything stays visible. */
+    @keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+    .rise-ready .rise { opacity: 0; }
+    .rise-ready .rise.is-in { animation: rise 950ms var(--ease) both; animation-delay: var(--d, 0ms); }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .rise-ready .rise { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="bar">
+    <span>Girasol Facade &nbsp;&middot;&nbsp; <b>The Generator</b></span>
+    <span class="bar-tag">ARC 585 &nbsp;++</span>
+    <div class="progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+
+    <section class="title">
+      <div>
+        <h1 aria-label="The Generator" data-split>THE <span class="teal-word">GENERATOR</span></h1>
+        <div class="subtitle">Girasol Facade &middot; A solar skin for any surface</div>
+        <div class="grow" aria-hidden="true"></div>
+        <p class="lead">My website shows the Girasol skin one way. This tool tests it on any surface, from a flat wall to a tower. Every module reads the Miami sun on its own face: where the sun hits it, it opens; where it is in shade, it closes.</p>
+        <a class="cta" href="generator/">Open the tool <i>&rarr;</i></a>
+      </div>
+      <div class="facts">
+        <div>Miami, Florida</div>
+        <div><span>6</span> building forms</div>
+        <div><span>3</span> module shapes</div>
+        <div><span>1</span> sun rule &middot; <span>4</span> design rules</div>
+        <div>ARC 585 &middot; Fall 2026</div>
+      </div>
+    </section>
+
+    <figure class="skin" style="margin: 0;">
+      <canvas id="skin" role="img" aria-label="Animation: a skin of modules. A sun moves across it; the modules under the sun open their leaves and the others close. The module shape changes between triangle, diamond and hexagon."></canvas>
+      <figcaption class="skin-tag">One rule: <b>open in the sun</b>, closed in shade &middot; <span id="skin-shape">Triangle</span></figcaption>
+    </figure>
+
+    <section class="doc" aria-labelledby="problem">
+      <h2 class="label rise" id="problem">Problem</h2>
+      <div>
+        <p class="big rise">Girasol is a skin of triangular modules on a south-facing facade in Miami. Each module has three leaves that open toward the sun.</p>
+        <p class="body rise">My website shows one fixed version; I never tested other module sizes or openings. What I most want to find out is whether the skin really gives energy. The answer changes with the season and the hour: an opening that sees out well in March can cost energy in December.</p>
+        <p class="body rise">It's for the people working on the floors behind the skin, who need to see out; the building owner, who wants the skin to make real energy; and the crews who maintain about 3,000 motors.</p>
+      </div>
+      <div></div>
+    </section>
+
+    <section class="wide" aria-labelledby="surface">
+      <div class="wide-head">
+        <h2 class="label rise" id="surface">Any surface</h2>
+        <!-- AGENT DRAFT: rewrite in your own words. -->
+        <p class="big rise">The same skin wraps <em>walls, curves and towers</em>. The tool works out where the sun hits each face, so the sunny side opens and the shaded side closes, with the same rule everywhere.</p>
+      </div>
+      <div class="forms">
+        <figure class="form rise" style="margin:0;--d:0ms"><canvas data-form="flat" role="img" aria-label="Plan of a flat wall: the skin opens when the sun is in front of it."></canvas><figcaption>Flat wall <span>01</span></figcaption></figure>
+        <figure class="form rise" style="margin:0;--d:80ms"><canvas data-form="curved" role="img" aria-label="Plan of a curved wall: the part facing the sun opens as the sun moves."></canvas><figcaption>Curved wall <span>02</span></figcaption></figure>
+        <figure class="form rise" style="margin:0;--d:160ms"><canvas data-form="wave" role="img" aria-label="Plan of a wave wall: the folds facing the sun open, the others close."></canvas><figcaption>Wave wall <span>03</span></figcaption></figure>
+        <figure class="form rise" style="margin:0;--d:0ms"><canvas data-form="sloped" role="img" aria-label="Section of a sloped wall leaning back: it faces the sky, so it opens to a high sun."></canvas><figcaption>Sloped wall <span>04</span></figcaption></figure>
+        <figure class="form rise" style="margin:0;--d:80ms"><canvas data-form="round" role="img" aria-label="Plan of a round tower: the side facing the sun opens and the far side closes as the sun goes around."></canvas><figcaption>Round tower <span>05</span></figcaption></figure>
+        <figure class="form rise" style="margin:0;--d:160ms"><canvas data-form="square" role="img" aria-label="Plan of a square tower: each face opens in turn as the sun moves."></canvas><figcaption>Square tower <span>06</span></figcaption></figure>
+      </div>
+      <div class="legend"><span><i style="background: var(--teal)"></i>Open, sun on that face</span><span><i style="background: #c4c5c3"></i>Closed, in shade</span><span><i style="background: var(--sun); height: 8px; width: 8px; border-radius: 50%"></i>The sun, from morning to evening</span></div>
+    </section>
+
+    <section class="doc" aria-labelledby="rules">
+      <h2 class="label rise" id="rules">Rules</h2>
+      <div>
+        <h3 class="sub rise">What can change</h3>
+        <ul class="chips rise">
+          <li>Building form</li><li>Module shape</li><li>Facing</li><li>Width</li><li>Floors</li><li>Module side</li>
+          <li>Diagrid bay</li><li>Opening in full sun</li><li>Eye-level band</li><li>Time of day</li><li>Season</li>
+        </ul>
+        <h3 class="sub rise">What must stay true &mdash; shown as warnings</h3>
+        <ol class="rules rise">
+          <li>At eye level, the hole you see through a module is never under 6 in.</li>
+          <li>At eye level, at least 25% of the facade is clear.</li>
+          <li>Over a clear day, the skin catches at least as much sun as the same surface closed.</li>
+          <li>Leaf tips never reach more than 1.5 ft past the frame.</li>
+        </ol>
+      </div>
+      <div></div>
+    </section>
+
+    <section class="doc" aria-labelledby="story">
+      <h2 class="label rise" id="story">Findings</h2>
+      <!-- AGENT DRAFT: rewrite in your own words. Claude drafted this section; Francisco rewrites it and says so in his AI use note. -->
+      <div>
+        <p class="big rise">Girasol started as a picture: a building that opens toward the sun like a sunflower. My website said each module made 180 W and the skin caught 2.6 times more sun than a closed one. Those numbers were part of the concept. I never measured them.</p>
+        <p class="body rise">So I built a tool that measures. It places the real sun over Miami for any hour in June, March or December, works out how squarely it hits every leaf on every face, and compares that with the same surface closed. The answer was humbling. A module gives about 40 W at best, not 180. Opening where the sun hits squarely looks like a sunflower, but it tilts the leaves away from the sun, so in March and December it catches a little less than staying shut.</p>
+        <p class="body rise">That changed what the skin is for. Opening is for light and view, not for more energy. The version I chose keeps a band of modules open at eye level so people can always see out, and lets the rest of the skin follow the sun. The tool also showed who the design leaves out: someone looking out at an angle sees a smaller hole than my 6 in rule measures, and it doesn't check that yet.</p>
+        <div class="nums rise">
+          <div class="num"><b data-count="40" data-prefix="~" data-suffix=" W">~40 W</b><span>Per module, best case &nbsp;<s>180 W</s></span></div>
+          <div class="num"><b data-count="1" data-prefix="~" data-suffix="&times;" data-dec="0">~1&times;</b><span>Sun caught vs closed &nbsp;<s>2.6&times;</s></span></div>
+          <div class="num"><b data-count="6" data-suffix=" in">6 in</b><span>Least view hole at eye level</span></div>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <section class="wide" aria-labelledby="tool">
+      <div class="wide-head" style="margin-bottom: 24px;">
+        <h2 class="label rise" id="tool">Try it</h2>
+        <p class="body rise" style="margin: 0;">Pick a building form and a module shape, then move the time of day and watch which side opens. Try December, or close the eye-level band, and see which rules break.</p>
+      </div>
+      <iframe class="tool rise" src="generator/" title="The Girasol Facade Generator, a 3D tool with sliders and design rules" loading="lazy"></iframe>
+      <div class="caption"><a href="generator/">Open the tool full screen &rarr;</a></div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <span>Girasol Facade. A speculative design concept by Francisco Herrero.</span>
+    <span><b>ARC 585</b> &middot; Human Centered AI for All</span>
+  </footer>
+
+  <script>
+  (function () {
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var TEAL = '#0d8b87', GREY = '#c4c5c3', INK = '#17181a', SUN = '#f2b340';
+    var smooth = function (k) { k = Math.max(0, Math.min(1, k)); return k * k * (3 - 2 * k); };
+
+    // Title: split into letters that rise in, like the portfolio.
+    var h1 = document.querySelector('[data-split]');
+    if (h1 && !reduce) {
+      var i = 0, out = '';
+      h1.textContent.trim().split(' ').forEach(function (w, wi) {
+        out += '<span class="word" aria-hidden="true">';
+        for (var c = 0; c < w.length; c++) out += '<span class="glyph' + (wi === 1 ? ' teal' : '') + '" style="--i:' + (i++) + '">' + w[c] + '</span>';
+        out += '</span>' + (wi === 0 ? ' ' : '');
+      });
+      h1.innerHTML = out;
+    } else if (h1) {
+      h1.innerHTML = 'THE <span style="color:' + TEAL + '">GENERATOR</span>';
+    }
+
+    // Scroll progress line in the top bar.
+    var bar = document.querySelector('.progress');
+    function onScroll() {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.setProperty('--p', max > 0 ? Math.min(1, scrollY / max) : 0);
+    }
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    // Canvas helper: crisp on any screen, redraws on resize.
+    function setup(cv) {
+      var ctx = cv.getContext('2d');
+      function size() {
+        var r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = Math.max(1, Math.round(r.width * d)); cv.height = Math.max(1, Math.round(r.height * d));
+        ctx.setTransform(d, 0, 0, d, 0, 0);
+        cv._w = r.width; cv._h = r.height;
+      }
+      size(); addEventListener('resize', size);
+      return ctx;
+    }
+    function visible(el, cb) {
+      if (!('IntersectionObserver' in window)) { cb(true); return; }
+      new IntersectionObserver(function (e) { cb(e[0].isIntersecting); }).observe(el);
+    }
+
+    // ---------- the living skin ----------
+    var SHAPES = [
+      { name: 'Triangle', n: 3 },
+      { name: 'Diamond', n: 4 },
+      { name: 'Hexagon', n: 6 }
+    ];
+    function tile(n, W, H, s) {
+      var list = [], R = s / (2 * Math.sin(Math.PI / n));
+      if (n === 3) {
+        var h = s * Math.sqrt(3) / 2;
+        for (var r = -1; r * h < H + h; r++) for (var x = -s; x < W + s; x += s) {
+          var off = (r & 1) * s / 2, y = r * h;
+          list.push({ x: x + off + s / 2, y: y + 2 * h / 3, R: R, turn: 0 });
+          list.push({ x: x + off + s, y: y + h / 3, R: R, turn: Math.PI });
+        }
+      } else if (n === 4) {
+        var D = s * Math.SQRT2;
+        for (var r4 = -1; r4 * D / 2 < H + D; r4++) for (var x4 = -D; x4 < W + D; x4 += D) list.push({ x: x4 + (r4 & 1) * D / 2, y: r4 * D / 2, R: R, turn: 0 });
+      } else {
+        var w = s * Math.sqrt(3);
+        for (var r6 = -1; r6 * 1.5 * s < H + 2 * s; r6++) for (var x6 = -w; x6 < W + w; x6 += w) list.push({ x: x6 + (r6 & 1) * w / 2, y: r6 * 1.5 * s, R: R, turn: 0 });
+      }
+      return list;
+    }
+    function drawModule(ctx, m, n, open, alpha) {
+      var start = -Math.PI / 2 + m.turn, pts = [], k;
+      for (k = 0; k < n; k++) { var a = start + k * 2 * Math.PI / n; pts.push([m.x + m.R * Math.cos(a), m.y + m.R * Math.sin(a)]); }
+      ctx.globalAlpha = alpha;
+      // the opening, teal, shows through as the leaves fold
+      ctx.beginPath(); pts.forEach(function (p, j) { ctx[j ? 'lineTo' : 'moveTo'](m.x + (p[0] - m.x) * 0.82, m.y + (p[1] - m.y) * 0.82); }); ctx.closePath();
+      ctx.fillStyle = 'rgba(13,139,135,' + (0.12 + 0.75 * open) + ')'; ctx.fill();
+      // leaves: one per side, hinged on the side, tip toward the center, shorter as they open
+      var reach = 0.94 * Math.cos(open * 72 * Math.PI / 180);
+      for (k = 0; k < n; k++) {
+        var p1 = pts[k], p2 = pts[(k + 1) % n];
+        var q1 = [m.x + (p1[0] - m.x) * 0.82, m.y + (p1[1] - m.y) * 0.82], q2 = [m.x + (p2[0] - m.x) * 0.82, m.y + (p2[1] - m.y) * 0.82];
+        var mx = (q1[0] + q2[0]) / 2, my = (q1[1] + q2[1]) / 2;
+        var b1 = [mx + (q1[0] - mx) * 0.94, my + (q1[1] - my) * 0.94], b2 = [mx + (q2[0] - mx) * 0.94, my + (q2[1] - my) * 0.94];
+        var tip = [mx + (m.x - mx) * reach, my + (m.y - my) * reach];
+        ctx.beginPath(); ctx.moveTo(b1[0], b1[1]); ctx.lineTo(b2[0], b2[1]); ctx.lineTo(tip[0], tip[1]); ctx.closePath();
+        ctx.fillStyle = open > 0.5 ? '#ffffff' : '#f4f4f1'; ctx.fill();
+        ctx.strokeStyle = 'rgba(23,24,26,0.12)'; ctx.lineWidth = 0.6; ctx.stroke();
+      }
+      // frame
+      ctx.beginPath(); pts.forEach(function (p, j) { ctx[j ? 'lineTo' : 'moveTo'](p[0], p[1]); }); ctx.closePath();
+      ctx.strokeStyle = 'rgba(23,24,26,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    var skinCv = document.getElementById('skin'), shapeTag = document.getElementById('skin-shape');
+    if (skinCv) {
+      var sctx = setup(skinCv), running = true, t0 = performance.now(), cache = {};
+      visible(skinCv, function (v) { running = v; if (v && !reduce) requestAnimationFrame(frame); });
+      function drawSkin(t) {
+        var W = skinCv._w, H = skinCv._h, s = Math.max(30, Math.min(52, W / 22));
+        var period = 7, idx = Math.floor(t / period) % 3, phase = (t % period) / period;
+        var fade = phase > 0.9 ? 1 - (phase - 0.9) / 0.1 : phase < 0.1 ? phase / 0.1 : 1;
+        var sh = SHAPES[idx]; if (shapeTag && shapeTag.textContent !== sh.name) shapeTag.textContent = sh.name;
+        var key = idx + '|' + Math.round(W) + '|' + Math.round(H);
+        var mods = cache[key] || (cache[key] = tile(sh.n, W, H, sh.n === 6 ? s * 0.62 : sh.n === 4 ? s * 0.78 : s));
+        var sx = W * (0.5 + 0.48 * Math.sin(t * 0.32)), sy = H * (0.45 + 0.25 * Math.cos(t * 0.21)), rad = Math.max(W, H) * 0.34;
+        sctx.clearRect(0, 0, W, H);
+        var g = sctx.createRadialGradient(sx, sy, 0, sx, sy, rad * 1.2);
+        g.addColorStop(0, 'rgba(242,179,64,0.55)'); g.addColorStop(1, 'rgba(242,179,64,0)');
+        sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
+        mods.forEach(function (m) {
+          var d = Math.hypot(m.x - sx, m.y - sy) / rad;
+          drawModule(sctx, m, sh.n, smooth(1 - d), 0.35 + 0.65 * fade);
+        });
+        sctx.beginPath(); sctx.arc(sx, sy, 9, 0, 2 * Math.PI); sctx.fillStyle = SUN; sctx.fill();
+      }
+      function frame(now) {
+        if (!running) return;
+        drawSkin((now - t0) / 1000);
+        requestAnimationFrame(frame);
+      }
+      drawSkin(reduce ? 2 : 0);
+      addEventListener('resize', function () { cache = {}; drawSkin((performance.now() - t0) / 1000); });
+    }
+
+    // ---------- six forms, one sun ----------
+    function outline(form) {
+      var pts = [], i, N = 90;
+      if (form === 'flat' || form === 'sloped') for (i = 0; i <= N; i++) pts.push([-0.7 + 1.4 * i / N, 0]);
+      if (form === 'curved') { var R = 0.8, A = 50 * Math.PI / 180; for (i = 0; i <= N; i++) { var a = -A + 2 * A * i / N; pts.push([R * Math.sin(a), R * Math.cos(a) - R]); } }
+      if (form === 'wave') for (i = 0; i <= N; i++) { var x = -0.7 + 1.4 * i / N; pts.push([x, 0.09 * Math.sin(x * Math.PI * 2 / 0.47)]); }
+      if (form === 'round') for (i = 0; i < 120; i++) { var b = i / 120 * 2 * Math.PI; pts.push([0.5 * Math.sin(b), 0.5 * Math.cos(b)]); }
+      if (form === 'square') for (i = 0; i < 160; i++) { var c = i / 160 * 2 * Math.PI, pw = function (v) { return (v < 0 ? -1 : 1) * Math.pow(Math.abs(v), 1 / 3); }; pts.push([0.5 * pw(Math.sin(c)), 0.5 * pw(Math.cos(c))]); }
+      return { pts: pts, closed: form === 'round' || form === 'square' };
+    }
+    var forms = [].slice.call(document.querySelectorAll('[data-form]')).map(function (cv) {
+      return { cv: cv, ctx: setup(cv), form: cv.getAttribute('data-form'), on: false };
+    });
+    forms.forEach(function (f) { visible(f.cv, function (v) { f.on = v; }); });
+    function drawForm(f, t) {
+      var ctx = f.ctx, W = f.cv._w, H = f.cv._h, S = Math.min(W, H), cx = W / 2, cy = H * 0.56;
+      ctx.clearRect(0, 0, W, H);
+      // The sun goes from east (morning) through south to west (evening), and back.
+      var day = 0.5 - 0.5 * Math.cos(t * 0.5);                 // 0 morning .. 1 evening
+      var az = (-90 + 180 * day) * Math.PI / 180;               // -90 east, 0 south, 90 west
+      // In plan, south is down the screen and east is right.
+      var sx = cx - Math.sin(az) * S * 0.42, sy = cy + Math.cos(az) * S * 0.36;
+      var dirX = (sx - cx), dirY = (sy - cy), dl = Math.hypot(dirX, dirY) || 1; dirX /= dl; dirY /= dl;
+      if (f.form === 'sloped') {
+        // Section: the wall leans back, so a high sun hits it more.
+        var alt = Math.sin(day * Math.PI) * 70 + 8;              // sun height through the day
+        var ar = alt * Math.PI / 180, lean = 20 * Math.PI / 180;
+        var base = [cx + S * 0.12, cy + S * 0.3], topP = [base[0] + Math.sin(lean) * S * 0.62, base[1] - Math.cos(lean) * S * 0.62];
+        ctx.beginPath(); ctx.moveTo(cx - S * 0.4, base[1]); ctx.lineTo(cx + S * 0.42, base[1]); ctx.strokeStyle = 'rgba(23,24,26,0.25)'; ctx.stroke();
+        var nrm = [-Math.cos(lean), -Math.sin(lean)];          // faces left (south) and up
+        var sunv = [-Math.cos(ar), -Math.sin(ar)];
+        var c = Math.max(0, nrm[0] * sunv[0] + nrm[1] * sunv[1]), open = smooth((c - 0.1) / 0.4);
+        for (var k = 0; k <= 12; k++) {
+          var px = base[0] + (topP[0] - base[0]) * k / 12, py = base[1] + (topP[1] - base[1]) * k / 12, L = 4 + 12 * open;
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + nrm[0] * L, py + nrm[1] * L); ctx.strokeStyle = open > 0.05 ? TEAL : GREY; ctx.lineWidth = 2; ctx.stroke();
+        }
+        ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(topP[0], topP[1]); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+        var sunX = base[0] - Math.cos(ar) * S * 0.55, sunY = base[1] - Math.sin(ar) * S * 0.55;
+        ctx.beginPath(); ctx.arc(sunX, sunY, 6, 0, 2 * Math.PI); ctx.fillStyle = SUN; ctx.fill();
+        return;
+      }
+      // sun path
+      ctx.beginPath(); ctx.ellipse(cx, cy, S * 0.42, S * 0.36, 0, 0, Math.PI); ctx.setLineDash([2, 5]); ctx.strokeStyle = 'rgba(138,140,142,0.6)'; ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
+      // Points are [x east, z south], the same as the tool.
+      var o = outline(f.form), P = o.pts, n = P.length, scale = S * 0.42;
+      var map = function (p) { return [cx + p[0] * scale, cy - S * 0.08 + p[1] * scale]; };
+      // petals: short grey ticks where closed, long teal ticks where the sun hits the face
+      for (var i = 0; i < n; i += 2) {
+        var a = P[(i - 1 + n) % n], b = P[(i + 1) % n];
+        if (!o.closed && (i === 0 || i >= n - 1)) { a = P[Math.max(0, i - 1)]; b = P[Math.min(n - 1, i + 1)]; }
+        var tx = b[0] - a[0], ty = b[1] - a[1], tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
+        var nsx = -ty, nsy = tx;                                // outward, same rule as the tool
+        var c2 = nsx * dirX + nsy * dirY, open2 = smooth((c2 - 0.1) / 0.4);
+        var q = map(P[i]), len = 3 + 13 * open2;
+        ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[0] + nsx * len, q[1] + nsy * len);
+        ctx.strokeStyle = open2 > 0.05 ? TEAL : GREY; ctx.globalAlpha = 0.35 + 0.65 * Math.max(open2, 0.3); ctx.lineWidth = 2; ctx.stroke(); ctx.globalAlpha = 1;
+      }
+      ctx.beginPath(); P.forEach(function (p, j) { var q = map(p); ctx[j ? 'lineTo' : 'moveTo'](q[0], q[1]); }); if (o.closed) ctx.closePath();
+      ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+      if (!o.closed) { // the building behind a wall
+        ctx.fillStyle = 'rgba(23,24,26,0.05)';
+        var first = map(P[0]), last = map(P[n - 1]);
+        ctx.beginPath(); P.forEach(function (p, j) { var q = map(p); ctx[j ? 'lineTo' : 'moveTo'](q[0], q[1]); });
+        ctx.lineTo(last[0], first[1] - S * 0.28); ctx.lineTo(first[0], first[1] - S * 0.28); ctx.closePath(); ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(sx, sy, 6, 0, 2 * Math.PI); ctx.fillStyle = SUN; ctx.fill();
+      ctx.font = '10px "Roboto Mono", monospace'; ctx.fillStyle = '#8a8c8e'; ctx.textAlign = 'center';
+      ctx.fillText('S', cx, H - 8); ctx.fillText('E', W - 10, cy + 4); ctx.fillText('W', 10, cy + 4);
+    }
+    var tf0 = performance.now();
+    function formsFrame(now) {
+      var t = (now - tf0) / 1000;
+      forms.forEach(function (f) { if (f.on) drawForm(f, t); });
+      requestAnimationFrame(formsFrame);
+    }
+    forms.forEach(function (f) { drawForm(f, reduce ? 3 : 0); });
+    if (!reduce) requestAnimationFrame(formsFrame);
+    addEventListener('resize', function () { forms.forEach(function (f) { drawForm(f, (performance.now() - tf0) / 1000); }); });
+
+    // ---------- numbers count up ----------
+    var nums = [].slice.call(document.querySelectorAll('[data-count]'));
+    if ('IntersectionObserver' in window && !reduce) {
+      var io2 = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var el = e.target, to = +el.getAttribute('data-count'), pre = el.getAttribute('data-prefix') || '', suf = el.getAttribute('data-suffix') || '';
+          var t1 = performance.now();
+          (function step(now) {
+            var k = smooth((now - t1) / 1400), v = to * k;
+            el.innerHTML = pre + (to < 5 ? (k < 1 ? v.toFixed(1) : to) : Math.round(v)) + suf;
+            if (k < 1) requestAnimationFrame(step);
+          })(t1);
+          io2.unobserve(el);
+        });
+      }, { threshold: 0.6 });
+      nums.forEach(function (n) { io2.observe(n); });
+    }
+
+    // ---------- reveal on scroll ----------
+    var els = document.querySelectorAll('.rise');
+    if (els.length && 'IntersectionObserver' in window && !reduce) {
+      var root = document.documentElement;
+      root.className += ' rise-ready';
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      [].forEach.call(els, function (el) { io.observe(el); });
+      setTimeout(function () { if (!document.querySelector('.rise.is-in')) root.className = root.className.replace(' rise-ready', ''); }, 2000);
+    }
+  }());
+  </script>
+</body>
+</html>

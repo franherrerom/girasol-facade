@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>
+    // When this page lives in a folder of a website (yoursite.com/generator) and is opened
+    // without the final slash, point relative files at the folder anyway. (No redirect, so
+    // hosts that strip slashes can't cause a loop.)
+    (function () {
+      var p = location.pathname;
+      if (location.protocol === 'file:' || p.endsWith('/') || /\.[a-z0-9]+$/i.test(p)) return;
+      var base = document.createElement('base');
+      // "/generator/index" (some servers drop .html) means the folder; "/generator" is the folder too.
+      base.href = /\/index$/i.test(p) ? p.replace(/index$/i, '') : p + '/';
+      document.head.appendChild(base);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generator</title>
+  <meta name="description" content="A 3D generator: design rules that produce variations, built with an AI agent.">
+  <link rel="stylesheet" href="./app/style.css">
+
+  <!-- If someone double-clicks index.html, modules can't load. Explain instead of showing a blank page. -->
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.innerHTML =
+          '<div class="fileguard"><h1>This page needs a local server</h1>' +
+          '<p>You opened <code>index.html</code> straight from your files. Browsers block 3D code that way.</p>' +
+          '<p><b>Easiest:</b> ask your agent <i>"Start a local server for this folder and give me the link."</i></p>' +
+          '<p><b>Or in a terminal inside this folder:</b></p>' +
+          '<pre>npx --yes serve .</pre><p>then open the link it prints (usually http://localhost:3000).</p>' +
+          '<p>Full steps are in README.md.</p></div>';
+      });
+    }
+  </script>
+
+  <script>
+    // Very old browsers (Safari before 16.4) can't load this page. Say so instead of staying blank.
+    if (location.protocol !== 'file:' && !(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('importmap'))) {
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.innerHTML = '<div class="fileguard"><h1>This browser is too old for this page</h1>' +
+          '<p>Update your browser, or open the page in a current Chrome, Edge, Firefox or Safari.</p></div>';
+      });
+    }
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./lib/three/three.module.js",
+      "three/addons/": "./lib/three/addons/",
+      "three/examples/jsm/": "./lib/three/addons/",
+      "lil-gui": "./lib/lil-gui.esm.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="titles">
+      <h1 id="toolName">Generator</h1>
+      <p id="toolDesc"></p>
+      <p id="byline" class="byline" hidden></p>
+    </div>
+    <div class="topbar-right">
+      <span id="liveBadge" class="badge" hidden title="This page reloads your generator by itself whenever generator.js changes.">Live reload on</span>
+      <div class="seg" role="group" aria-label="Units">
+        <button type="button" data-units="feet" class="on">ft</button>
+        <button type="button" data-units="meters">m</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage" aria-label="3D view">
+      <div id="viewport"></div>
+
+      <div class="viewbar" role="toolbar" aria-label="View">
+        <button type="button" data-view="3d" class="on">3D</button>
+        <button type="button" data-view="plan">Plan</button>
+        <button type="button" data-view="front">Front</button>
+        <button type="button" data-view="side">Side</button>
+        <button type="button" id="fitBtn" title="Frame the whole model">Fit</button>
+        <span class="sep"></span>
+        <label class="chk"><input type="checkbox" id="figureChk"> Scale figure</label>
+        <label class="chk"><input type="checkbox" id="cutChk"> Cut</label>
+        <input type="range" id="cutRange" min="0" max="1" step="0.001" value="0.5" disabled aria-label="Cut height">
+        <span id="cutLabel" class="muted"></span>
+      </div>
+
+      <div id="gridLabel" class="gridlabel"></div>
+
+      <div id="errorBox" class="errorbox" hidden role="alert">
+        <div class="errorhead">
+          <strong>Your generator has a problem</strong>
+          <button type="button" id="errorClose" aria-label="Hide">×</button>
+        </div>
+        <p class="muted">The last working version is still showing. Copy the error and paste it to your agent.</p>
+        <pre id="errorText"></pre>
+        <button type="button" id="errorCopy" class="primary">Copy error for my agent</button>
+      </div>
+
+      <div id="toast" class="toast" hidden></div>
+    </section>
+
+    <aside class="panel">
+      <section class="card" id="featCard" hidden>
+        <h2>The designer's variations</h2>
+        <p class="hint" id="featHint">Saved by the designer. Click one to load it, then move the sliders to make it your own.</p>
+        <div id="featGrid" class="vargrid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Use the tool</h2>
+        <p class="hint" id="useHint">Move the sliders to make variations. To change what the tool <i>can</i> do, ask your agent to change <code>generator.js</code>, your definition.</p>
+        <div id="guiHost"></div>
+        <div class="row">
+          <button type="button" id="resetBtn">Reset to defaults</button>
+          <button type="button" id="copySettingsBtn" title="Copy the current slider values as text">Copy settings</button>
+        </div>
+      </section>
+
+      <section class="card" id="warnCard" hidden>
+        <h2>Rule checks</h2>
+        <ul id="warnList" class="warnlist"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Model</h2>
+        <dl id="statsList" class="stats"></dl>
+      </section>
+
+      <section class="card">
+        <h2 id="varTitle">Variations</h2>
+        <div class="row">
+          <button type="button" id="saveVarBtn" class="primary">Save variation</button>
+          <button type="button" id="sheetBtn">Download sheet</button>
+          <button type="button" id="exportVarBtn" title="Save your variations as variations.json, to publish them with your tool">Export for website</button>
+        </div>
+        <div id="varGrid" class="vargrid"></div>
+        <p id="varEmpty" class="hint">Saved variations appear here. Click one to bring it back.</p>
+      </section>
+
+      <section class="card">
+        <h2>Context</h2>
+        <p class="hint">Bring in your own model (OBJ, STL or GLB from Rhino) to design around. It is never exported.</p>
+        <div class="row">
+          <button type="button" id="importBtn">Import model…</button>
+          <label class="chk"><input type="checkbox" id="ctxShowChk" checked disabled> Show</label>
+          <button type="button" id="ctxClearBtn" disabled>Remove</button>
+        </div>
+        <p id="ctxInfo" class="hint"></p>
+        <input type="file" id="importFile" accept=".obj,.stl,.glb" hidden>
+      </section>
+
+      <section class="card">
+        <h2>Export</h2>
+        <div class="row">
+          <button type="button" id="stlBtn" class="primary">STL for printing…</button>
+          <button type="button" id="objBtn">OBJ for Rhino…</button>
+          <button type="button" id="shotBtn">Screenshot</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Import dialog -->
+  <dialog id="importDlg">
+    <form method="dialog">
+      <h2>Import a context model</h2>
+      <p id="importName" class="muted"></p>
+      <label>The file's units
+        <select id="importUnits">
+          <option value="feet">Feet</option>
+          <option value="inches">Inches</option>
+          <option value="meters">Meters</option>
+          <option value="centimeters">Centimeters</option>
+          <option value="millimeters">Millimeters</option>
+        </select>
+      </label>
+      <label>Which way is up?
+        <select id="importUp">
+          <option value="z">Z is up (Rhino, most CAD)</option>
+          <option value="y">Y is up (GLB, Blender exports, three.js)</option>
+        </select>
+      </label>
+      <label>Heights
+        <select id="importHeight">
+          <option value="keep">Keep the file's heights (its 0 is the ground)</option>
+          <option value="drop">Put its lowest point on the ground</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="importCenter" checked> Move it to the center of the grid (left/right and front/back only)</label>
+      <p class="hint">Not sure about units? Pick one, turn on the scale figure, and import again if it looks wrong. If the model floats or sinks, import again and change Heights.</p>
+      <menu>
+        <button value="cancel" type="submit">Cancel</button>
+        <button value="ok" type="submit" class="primary">Import</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- STL dialog -->
+  <dialog id="stlDlg">
+    <form method="dialog">
+      <h2>Export STL for printing</h2>
+      <label>Print scale
+        <select id="stlScale">
+          <option value="1">Full size (1:1)</option>
+          <option value="12">1" = 1'-0" (1:12)</option>
+          <option value="24">1/2" = 1'-0" (1:24)</option>
+          <option value="48">1/4" = 1'-0" (1:48)</option>
+          <option value="96">1/8" = 1'-0" (1:96)</option>
+          <option value="192">1/16" = 1'-0" (1:192)</option>
+          <option value="20">1:20</option>
+          <option value="50">1:50</option>
+          <option value="100">1:100</option>
+          <option value="200">1:200</option>
+          <option value="500">1:500</option>
+        </select>
+      </label>
+      <p id="stlInfo"></p>
+      <ul id="stlWarn" class="warnlist"></ul>
+      <p class="hint">The file is in millimeters with Z up, which is what slicers expect. Only your design is exported, not the context, figure or ground. The thin-part check measures each part's overall size, so a thin wall inside a bigger shape can slip past it: always check the file in your slicer.</p>
+      <menu>
+        <button value="cancel" type="submit">Cancel</button>
+        <button value="ok" type="submit" class="primary">Download STL</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- OBJ dialog -->
+  <dialog id="objDlg">
+    <form method="dialog">
+      <h2>Export OBJ for Rhino</h2>
+      <label>Units in the file
+        <select id="objUnits">
+          <option value="feet">Feet</option>
+          <option value="inches">Inches</option>
+          <option value="meters">Meters</option>
+          <option value="millimeters">Millimeters</option>
+        </select>
+      </label>
+      <p class="hint">Real size, Z up. In Rhino, set your document to the same units first (type <code>Units</code> in the command line), then File &gt; Import with "Map OBJ Y to Rhino Z" unchecked. The unit is in the file name so you don't forget.</p>
+      <menu>
+        <button value="cancel" type="submit">Cancel</button>
+        <button value="ok" type="submit" class="primary">Download OBJ</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script type="module" src="./app/app.js"></script>
+  <script>
+    // If the tool's own files never load (usually a website that sends every address to its home page),
+    // say so instead of leaving a blank page.
+    setTimeout(function () {
+      if (window.__appLoaded || location.protocol === 'file:') return;
+      var stage = document.querySelector('.stage');
+      if (stage) stage.innerHTML = '<div class="fileguard"><h1>The tool\'s files didn\'t load</h1>' +
+        '<p>On your website: link to <code>generator/index.html</code>, keep the whole folder together, and for Lovable, Next.js or Vite put it inside <code>public/</code>. Some sites send every address to their home page; ask your agent to make an exception for the <code>generator</code> folder.</p>' +
+        '<p>On your computer: refresh the page. If it still shows this, check the terminal running the server is open.</p></div>';
+    }, 12000);
+  </script>
+</body>
+</html>

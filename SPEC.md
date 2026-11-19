@@ -48,8 +48,16 @@ Content:
 - Reached mainly by clicking a triangle on day.html, and also from the menu.
 - Footer line.
 
+### project.html (The Generator)
+Purpose: the ARC 585 capstone project page. Public, never gated, so anyone with the link can open it.
+Look: styled like my portfolio (franherrero.com) project pages, not like the rest of Girasol: paper background, the portfolio teal (#0d8b87), Archivo text, Roboto Mono labels, a sticky mono top bar, letters that rise in, and two canvas animations (a skin that opens under a moving sun, and six building forms with the sun going round). Motion stops for visitors who ask for reduced motion. Its styles live in the page itself, not in css/style.css.
+Content: what the generator is and who it's for, its sliders and rules, the variations sheet and the chosen design (added only once the real images exist, no empty frames), the story of what the tool found, and the tool itself embedded from generator/index.html with an "Open the full tool" link.
+
+### generator/ (the tool)
+The Generator Starter folder with my generator.js. Public, never gated. Its rules are in generator/AGENTS.md and its brief in generator/SPEC.md.
+
 ### Every page
-- Top menu: the Girasol logo (links to Home), Home, A Day, The Module, Log out.
+- Top menu: the Girasol logo (links to Home), Home, A Day, The Module, The Generator, Log out. On project.html there is no menu, only a portfolio-style mono bar with the page name: the other pages are behind the login, so a public visitor clicking them would land on the login page.
 - Footer: "Girasol Facade. A speculative design concept by Francisco Herrero."
 
 ## Concept figures (declared exception)
@@ -73,7 +81,7 @@ Never invent facts, dimensions, dates or names Fran has not given. Ask instead. 
 - Supabase project: girasol-facade (us-east-1, Free plan), https://jxeenqvokwceylkqenrf.supabase.co. Its URL and publishable key live in js/supabase-config.js.
 - login.html is the log-in page and is never gated.
 - index.html is the home page.
-- Every page except login.html sends signed-out visitors to login.html. Pages stay hidden until the session check passes, so gated content never flashes.
+- Every page except login.html, project.html and the generator/ folder sends signed-out visitors to login.html. Pages stay hidden until the session check passes, so gated content never flashes.
 - After log-in, go to index.html.
 - A log-in lasts only for the current browser tab. Every new visit, new tab or link opened fresh starts at login.html.
 - Log out is in the menu on every page and returns the visitor to login.html.
