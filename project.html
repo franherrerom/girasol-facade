@@ -165,7 +165,33 @@
     .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--grey); }
     .legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 8px; }
 
-    .sheet { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; }
+    .vars { display: grid; grid-template-columns: var(--forms); gap: 20px; align-items: start; }
+    .var { margin: 0; background: #fff; border: 1px solid var(--rule); overflow: hidden; transition: border-color 400ms, transform 400ms var(--ease), box-shadow 400ms var(--ease); }
+    .var img { display: block; width: 100%; height: auto; transition: transform 900ms var(--ease); }
+    .var:hover { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 18px 30px -22px var(--teal); }
+    .var:hover img { transform: scale(1.06); }
+    .var-img { overflow: hidden; background: #f7f6f2; }
+    .var figcaption { padding: 18px 18px 16px; border-top: 1px solid var(--rule); }
+    .var-title { font-size: 20px; font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
+    .var-no { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; color: #fff; background: var(--teal); padding: 3px 7px; border-radius: 3px; margin-right: 8px; vertical-align: 3px; }
+    .var-sum { margin: 10px 0 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink); }
+    .var-key { margin: 4px 0 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--teal); }
+    .var-desc { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--text); }
+    .var-more { margin-top: 14px; border-top: 1px solid var(--rule); }
+    .var-more summary {
+      list-style: none; cursor: pointer; padding: 12px 0 0;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    }
+    .var-more summary::-webkit-details-marker { display: none; }
+    .var-more summary::after { content: ' +'; }
+    .var-more[open] summary::after { content: ' –'; }
+    .var-more .close, .var-more[open] .open { display: none; }
+    .var-more[open] .close { display: inline; }
+    .var-more summary:hover { color: var(--ink); }
+    .var-more dl { margin: 12px 0 0; display: grid; gap: 0; animation: fade 400ms both; }
+    .var-more dl div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--rule); }
+    .var-more dt { font-size: 13px; color: var(--grey); }
+    .var-more dd { margin: 0; font-family: var(--mono); font-size: 12px; color: var(--ink); text-align: right; }
 
     /* Numbers */
     .nums { display: grid; grid-template-columns: var(--nums); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 44px; }
@@ -282,12 +308,91 @@
     </section>
 
     <section class="wide" aria-labelledby="variations">
-      <div class="wide-head" style="margin-bottom: 24px;">
+      <div class="wide-head" style="margin-bottom: 32px;">
         <h2 class="label rise" id="variations">Variations</h2>
-        <p class="body rise" style="margin: 0;">Six versions I made with the tool, all at noon in March and turned 30 degrees: a round tower, a wave wall, flat walls and square towers, with triangles, diamonds and hexagons.</p>
+        <p class="body rise" style="margin: 0;">Six versions I made with the tool: towers, a wave wall and flat walls, in triangles, diamonds and hexagons. All of them at noon in March, turned 30 degrees, opening with the sun.</p>
       </div>
-      <img class="sheet rise" src="images/girasol-facade-generator_variations.png" width="1536" height="1406" loading="lazy" alt="Variations sheet with six versions of the Girasol skin made in the generator: V1 a round tower with triangles, V2 a wave wall with diamonds, V3 a flat wall with hexagons, V4 a square tower with diamonds, V5 a narrower square tower with triangles, V6 a flat wall with triangles, each listed with its settings.">
-      <div class="caption">Variations sheet, downloaded from the tool</div>
+      <div class="vars">
+        <figure class="var rise" style="--d:0ms">
+          <div class="var-img"><img src="images/variation-1.webp" width="477" height="357" loading="lazy" alt="V1: a round tower covered in triangle modules, 48 ft diameter, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V1</span> Round tower</h3>
+            <p class="var-sum">Triangles &middot; 48 ft diameter &middot; 9 floors</p>
+            <p class="var-key">Modules 4 ft &middot; 60% open in full sun</p>
+            <p class="var-desc">A slim round tower. Only the side facing the sun opens; the far side stays shut.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V1</span></summary>
+              <dl><div><dt>Building form</dt><dd>Round tower</dd></div><div><dt>Module shape</dt><dd>Triangle</dd></div><div><dt>Diameter</dt><dd>48 ft</dd></div><div><dt>Module side</dt><dd>4 ft</dd></div><div><dt>Opening in full sun</dt><dd>60%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+        <figure class="var rise" style="--d:80ms">
+          <div class="var-img"><img src="images/variation-2.webp" width="477" height="357" loading="lazy" alt="V2: a wave wall covered in diamond modules, 120 ft width, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V2</span> Wave wall</h3>
+            <p class="var-sum">Diamonds &middot; 120 ft width &middot; 9 floors</p>
+            <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
+            <p class="var-desc">The wall folds in waves, so each fold turns to the sun at a different time of day.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V2</span></summary>
+              <dl><div><dt>Building form</dt><dd>Wave wall</dd></div><div><dt>Module shape</dt><dd>Diamond</dd></div><div><dt>Width</dt><dd>120 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+        <figure class="var rise" style="--d:160ms">
+          <div class="var-img"><img src="images/variation-3.webp" width="477" height="357" loading="lazy" alt="V3: a flat wall covered in hexagon modules, 120 ft width, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V3</span> Flat wall</h3>
+            <p class="var-sum">Hexagons &middot; 120 ft width &middot; 9 floors</p>
+            <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
+            <p class="var-desc">A full flat frontage in hexagons, with the whole face opening together.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V3</span></summary>
+              <dl><div><dt>Building form</dt><dd>Flat wall</dd></div><div><dt>Module shape</dt><dd>Hexagon</dd></div><div><dt>Width</dt><dd>120 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+        <figure class="var rise" style="--d:0ms">
+          <div class="var-img"><img src="images/variation-4.webp" width="477" height="357" loading="lazy" alt="V4: a square tower covered in diamond modules, 120 ft width, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V4</span> Square tower</h3>
+            <p class="var-sum">Diamonds &middot; 120 ft width &middot; 9 floors</p>
+            <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
+            <p class="var-desc">A wide tower with rounded corners. Each face opens in turn as the sun moves.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V4</span></summary>
+              <dl><div><dt>Building form</dt><dd>Square tower</dd></div><div><dt>Module shape</dt><dd>Diamond</dd></div><div><dt>Width</dt><dd>120 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+        <figure class="var rise" style="--d:80ms">
+          <div class="var-img"><img src="images/variation-5.webp" width="477" height="357" loading="lazy" alt="V5: a square tower covered in triangle modules, 60 ft width, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V5</span> Square tower</h3>
+            <p class="var-sum">Triangles &middot; 60 ft width &middot; 9 floors</p>
+            <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
+            <p class="var-desc">The same tower at half the width, in triangles.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V5</span></summary>
+              <dl><div><dt>Building form</dt><dd>Square tower</dd></div><div><dt>Module shape</dt><dd>Triangle</dd></div><div><dt>Width</dt><dd>60 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+        <figure class="var rise" style="--d:160ms">
+          <div class="var-img"><img src="images/variation-6.webp" width="477" height="357" loading="lazy" alt="V6: a flat wall covered in triangle modules, 120 ft width, 9 floors, rendered in the generator."></div>
+          <figcaption>
+            <h3 class="var-title"><span class="var-no">V6</span> Flat wall</h3>
+            <p class="var-sum">Triangles &middot; 120 ft width &middot; 9 floors</p>
+            <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
+            <p class="var-desc">The original Girasol pattern on a full flat frontage.</p>
+            <details class="var-more">
+              <summary><span class="open">View details</span><span class="close">Close details &mdash; V6</span></summary>
+              <dl><div><dt>Building form</dt><dd>Flat wall</dd></div><div><dt>Module shape</dt><dd>Triangle</dd></div><div><dt>Width</dt><dd>120 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
+            </details>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="caption">Settings copied from my saved variations in the tool.</p>
     </section>
 
     <section class="doc" aria-labelledby="story">
