@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Generator | Girasol Facade</title>
+  <title>Girasol Facade | A solar skin for any surface</title>
   <meta name="description" content="A 3D tool for the Girasol solar skin on any surface: walls, curves and towers. Every module opens where the Miami sun hits it and closes in shade.">
 
   <meta property="og:title" content="The Girasol Facade Generator">
@@ -171,6 +171,8 @@
     .var:hover { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 18px 30px -22px var(--teal); }
     .var:hover img { transform: scale(1.06); }
     .var-img { overflow: hidden; background: #f7f6f2; }
+    .var-chosen { border: 2px solid var(--teal); box-shadow: 0 18px 34px -24px var(--teal); }
+    .var-flag { background: var(--teal); color: #fff; padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
     .var figcaption { padding: 18px 18px 16px; border-top: 1px solid var(--rule); }
     .var-title { font-size: 20px; font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
     .var-no { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; color: #fff; background: var(--teal); padding: 3px 7px; border-radius: 3px; margin-right: 8px; vertical-align: 3px; }
@@ -241,10 +243,10 @@
 
     <section class="title">
       <div>
-        <h1 aria-label="The Generator" data-split>THE <span class="teal-word">GENERATOR</span></h1>
-        <div class="subtitle">Girasol Facade &middot; A solar skin for any surface</div>
+        <h1 aria-label="Girasol Facade" data-split>GIRASOL <span class="teal-word">FACADE</span></h1>
+        <div class="subtitle">A solar skin for any surface</div>
         <div class="grow" aria-hidden="true"></div>
-        <p class="lead">My website shows the Girasol skin one way. This tool tests it on any surface, from a flat wall to a tower. Every module reads the Miami sun on its own face: where the sun hits it, it opens; where it is in shade, it closes.</p>
+        <p class="lead">My website shows the Girasol skin one way. This tool tests it on any surface, from a flat wall to a tower. Every module reads the Miami sun on its own face: where the sun hits it, it opens; where it is in shade, it closes. The building behind the skin is a parking garage, so the design I chose is the square tower: it suits a parking structure best.</p>
         <a class="cta" href="generator/">Open the tool <i>&rarr;</i></a>
       </div>
       <div class="facts">
@@ -365,13 +367,14 @@
             </details>
           </figcaption>
         </figure>
-        <figure class="var rise" style="--d:80ms">
+        <figure class="var var-chosen rise" style="--d:80ms">
+          <div class="var-flag">Chosen design &middot; parking tower</div>
           <div class="var-img"><img src="images/variation-5.webp" width="477" height="357" loading="lazy" alt="V5: a square tower covered in triangle modules, 60 ft width, 9 floors, rendered in the generator."></div>
           <figcaption>
             <h3 class="var-title"><span class="var-no">V5</span> Square tower</h3>
             <p class="var-sum">Triangles &middot; 60 ft width &middot; 9 floors</p>
             <p class="var-key">Modules 3 ft 6 in &middot; 100% open in full sun</p>
-            <p class="var-desc">The same tower at half the width, in triangles.</p>
+            <p class="var-desc">The same tower at half the width, in triangles. My chosen design: the building is a parking garage, and the square tower suits it best.</p>
             <details class="var-more">
               <summary><span class="open">View details</span><span class="close">Close details &mdash; V5</span></summary>
               <dl><div><dt>Building form</dt><dd>Square tower</dd></div><div><dt>Module shape</dt><dd>Triangle</dd></div><div><dt>Width</dt><dd>60 ft</dd></div><div><dt>Module side</dt><dd>3 ft 6 in</dd></div><div><dt>Opening in full sun</dt><dd>100%</dd></div><div><dt>Facing</dt><dd>30°</dd></div><div><dt>Floors behind the skin</dt><dd>9</dd></div><div><dt>Bay size</dt><dd>4 modules</dd></div><div><dt>Time of day</dt><dd>12 h</dd></div><div><dt>Season</dt><dd>March</dd></div><div><dt>Open with the sun</dt><dd>Yes</dd></div></dl>
@@ -444,7 +447,7 @@
       });
       h1.innerHTML = out;
     } else if (h1) {
-      h1.innerHTML = 'THE <span style="color:' + TEAL + '">GENERATOR</span>';
+      h1.innerHTML = 'GIRASOL <span style="color:' + TEAL + '">FACADE</span>';
     }
 
     // Scroll progress line in the top bar.
