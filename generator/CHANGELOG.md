@@ -12,6 +12,18 @@ Format:
 
 ---
 
+## 2026-11-19: Removed the eye-level band
+- **I asked for:** Remove the eye-level band; I didn't want it.
+- **What changed:** The Eye-level band slider is gone. Every module now follows only the sun rule. The view rules still check the modules at eye level (3 to 7 ft above each floor).
+- **Assumptions:** None new.
+- **Still not right:** When the sun closes the eye-level modules, the view rules warn. That is the trade-off the tool shows.
+
+## 2026-11-19: No open strips by default
+- **I asked for:** The print and the tool showed open strips; they are not supposed to be like that. A smaller print with fewer triangles.
+- **What changed:** The strips were the eye-level band holding modules 3 to 7 ft above each floor at 85% open. Its default is now 5%, so it no longer overrides the sun rule and the whole skin opens and closes the same way. The slider is still there. Made a smaller STL with bigger modules.
+- **Assumptions:** Small print: 36 ft wide, 2 floors, 6 ft modules, 1/8" = 1'-0", noon in March.
+- **Still not right:** Without the band, the eye-level view rules can warn when the sun closes those modules.
+
 ## 2026-11-19: Any surface, three module shapes, one sun rule
 - **I asked for:** Other kinds of facades (curves, skyscrapers) to show it works on any surface; module shapes that open and close with the light in the same theme; on every surface, work out the sun on that side, fully open where it hits 100%, closed where it doesn't, consistent everywhere.
 - **What changed:** New sliders Building form (flat, curved, wave, sloped wall, round tower, square tower), Module shape (triangle, diamond, hexagon) and Facing. Floors now go to 24. Every module now reads the sun on its own face: open in direct sun, closed in shade. This replaces the old rule that opened the whole skin by the sun's height. Rules and numbers (view hole, clear view, day catch, leaf reach) now work for every shape and form. New numbers: Modules in full sun now, Modules open now.

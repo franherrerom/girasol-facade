@@ -24,7 +24,6 @@ export const parameters = {
   side:   { label: 'Module side',           value: 4,   min: 3,  max: 8,   step: 0.5, type: 'length' },
   bay:    { label: 'Bay size (modules)',    value: 4,   min: 2,  max: 8,   step: 1, help: 'Modules between diagrid lines' },
   open:   { label: 'Opening in full sun',   value: 60,  min: 5,  max: 100, step: 1, unit: '%' },
-  band:   { label: 'Eye-level band',        value: 85,  min: 5,  max: 100, step: 1, unit: '%', help: 'Least opening of the modules 3 to 7 ft above each floor, so people can see out' },
   hour:   { label: 'Time of day',           value: 12,  min: 6,  max: 18,  step: 0.5, unit: 'h' },
   season: { label: 'Season',                value: 'March', options: ['June', 'March', 'December'] },
   follow: { label: 'Open with the sun',     value: true, help: 'Each module opens as much as direct sun hits its own face, and closes in shade' },
@@ -40,7 +39,7 @@ const OPEN_MIN = 5;                // % (fully closed still leaves a sliver)
 const MAX_ANGLE = 72;              // degrees at 100% open
 const INNER = 0.82;                // leaves sit inside the frame
 const LEAF = 0.94;                 // leaf size against its space
-const EYE_LOW = 3, EYE_HIGH = 7;   // eye-level band, ft above each floor
+const EYE_LOW = 3, EYE_HIGH = 7;   // eye level, ft above each floor (used by the view rules)
 const SUN_NONE = 0.1, SUN_FULL = 0.5; // sun on a face: below this it stays closed, above this it is fully open
 const SLOPE = 20;                  // the sloped wall leans back this many degrees
 const RAD = Math.PI / 180;
@@ -76,7 +75,7 @@ const isEye = (y) => {
 // The one rule for every module: how open it is, from the sun on its own face (c = 1 is straight on).
 function moduleOpen(p, c, eye) {
   const base = p.follow ? OPEN_MIN + (p.open - OPEN_MIN) * smooth((c - SUN_NONE) / (SUN_FULL - SUN_NONE)) : p.open;
-  return eye ? Math.max(p.band, base) : base;
+  return base;
 }
 
 // ---------- the surface ----------
@@ -227,7 +226,7 @@ const leafSqFt = (p) => {
 // Sun caught over one clear day in this season, against the same surface closed flat.
 let dayCache = { key: '', value: null };
 function dayCatch(p) {
-  const key = JSON.stringify([p.form, p.module, p.facing, p.width, p.floors, p.side, p.open, p.band, p.season, p.follow]);
+  const key = JSON.stringify([p.form, p.module, p.facing, p.width, p.floors, p.side, p.open, p.season, p.follow]);
   if (dayCache.key === key) return dayCache.value;
   const { mods } = layout(p), list = sample(mods), phis = petalAngles(p);
   let skin = 0, flat = 0;
@@ -256,12 +255,12 @@ function dayCatch(p) {
   dayCache = { key, value };
   return value;
 }
-const leafReach = (p) => innerAp(p) * LEAF * Math.sin(angleOf(Math.max(p.band, p.open)) * RAD);
+const leafReach = (p) => innerAp(p) * LEAF * Math.sin(angleOf(p.open) * RAD);
 // The least open module at eye level right now (the worst view).
 function eyeOpening(p) {
   const s = sunLocal(p, p.hour);
   const eyes = sample(layout(p).mods.filter((m) => m.eye), 800);
-  if (!eyes.length) return Math.max(p.band, p.follow ? OPEN_MIN : p.open);
+  if (!eyes.length) return p.follow ? OPEN_MIN : p.open;
   return Math.min(...eyes.map((m) => moduleOpen(p, sunOnFace(m, s), true)));
 }
 
